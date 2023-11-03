@@ -1,0 +1,3 @@
+[submodule "sample/sample/CPSC304_Node_Project"]
+	path = sample/sample/CPSC304_Node_Project
+	url = git@github.students.cs.ubc.ca:CPSC304/CPSC304_Node_Project.git
