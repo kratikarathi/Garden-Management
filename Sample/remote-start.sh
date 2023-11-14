@@ -34,7 +34,7 @@ END=60000
 # Loop through the range and check if the port is in use
 for PORT in $(seq $START $END); do
     # Use lsof to check if the port is in use
-    if ! lsof -i :$PORT > /dev/null; then
+    if ! ss -tuln | grep -q ":$PORT"; then
         # Bind to the port using a temporary process
         nc -l -p $PORT &
         TEMP_PID=$!

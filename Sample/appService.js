@@ -53,6 +53,159 @@ async function fetchDemotableFromDb() {
     });
 }
 
+async function initiatePlotOwnerTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE PlotOwnerTable`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE PlotOwnerTable (
+                SIN CHAR(9),
+                PhoneNum CHAR(10),
+                PlotID INTEGER ,
+                PRIMARY KEY (SIN), 
+                FOREIGN KEY (PlotID) REFERENCES Plot (PlotID)
+                    ON DELETE CASCADE 
+                    ON UPDATE CASCADE, 
+                FOREIGN KEY (SIN) REFERENCES CommunityMember(SIN) 
+                    ON DELETE CASCADE 
+                    ON UPDATE CASCADE 
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function initiateEventTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE EventTable`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE EventTable (
+                EventID INTEGER,
+                EventDescription VARCHAR (200),
+                DT DATE,
+                PRIMARY KEY(EventID)
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function initiateRequiresTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE RequiresTable`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE RequiresTable (
+                TaskNum INTEGER,
+                PlotID INTEGER,
+                SupplyID INTEGER,
+                ToolID INTEGER,
+                PRIMARY KEY (TaskNum,PlotID, SupplyID,ToolID),
+                FOREIGN KEY (TaskNum) REFERENCES PlotTask(TaskNum) 
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
+                FOREIGN KEY (PlotID) REFERENCES Plot(PlotID)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
+                FOREIGN KEY (SupplyID) REFERENCES Supply(SupplyID)
+                    ON DELETE SET NULL
+                    ON UPDATE CASCADE,
+                FOREIGN KEY (ToolID) REFERENCES Tool(ToolID)
+                    ON DELETE SET NULL
+                    ON UPDATE CASCADE
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function initiateGardenerTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE GardernerTable`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE GardenerTable (
+               SIN CHAR(9),
+               HoursWorked INTEGER
+               PRIMARY KEY (SIN),
+               FOREIGN KEY (SIN) REFERENCES CommunityMember(SIN)
+                   ON DELETE CASCADE
+                   ON UPDATE CASCADE
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function initiateCommunityMemberTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE CommunityMemberTable`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE CommunityMemberTable (
+                SIN char (9),
+                PersonName VARCHAR (50)
+                PRIMARY KEY (SIN),
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function initiateBuildingTable() {
+    return await withOracleDB(async (connection) => {
+        try {
+            await connection.execute(`DROP TABLE BuildingTable`);
+        } catch(err) {
+            console.log('Table might not exist, proceeding to create...');
+        }
+
+        const result = await connection.execute(`
+            CREATE TABLE BuildingTable (
+                BuildingName VARCHAR (50),
+                Capacity INTEGER,
+                BuildingLocation VARCHAR (50),
+                DoorCode CHAR (4)
+                PRIMARY KEY (BuildingName)
+            )
+        `);
+        return true;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function initiateDemotable() {
     return await withOracleDB(async (connection) => {
         try {
