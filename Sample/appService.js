@@ -46,7 +46,7 @@ async function testOracleConnection() {
 
 async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
+        const result = await connection.execute(`SELECT * FROM DEMOTABLE`);
         return result.rows;
     }).catch(() => {
         return [];
@@ -56,7 +56,7 @@ async function fetchDemotableFromDb() {
 async function dropAllTables() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            'DROP TABLE PlotOwnerTable;
+            `DROP TABLE PlotOwnerTable;
              DROP TABLE EventTable;
              DROP TABLE RequiresTable;
              DROP TABLE GardenerTable;
@@ -71,7 +71,7 @@ async function dropAllTables() {
              DROP TABLE Supply;
              DROP TABLE PlotPrices;
              DROP TABLE Areas;
-        ');
+        `);
         return result.rows;
     }).catch(() => {
         return [];
@@ -85,7 +85,6 @@ async function initiateAllTable() {
         } catch(err) {
             console.log('Table might not exist, proceeding to create...');
         }
-
         const result = await connection.execute(`
             CREATE TABLE PlotOwnerTable (
                 SIN CHAR(9),
@@ -98,8 +97,8 @@ async function initiateAllTable() {
                 FOREIGN KEY (SIN) REFERENCES CommunityMember(SIN) 
                     ON DELETE CASCADE 
                     ON UPDATE CASCADE 
-            )
-            INSERT INTO PlotOwnerTable (“888789888", 2368634471, 23) 
+            );
+            INSERT INTO PlotOwnerTable (“888789888”, 2368634471, 23) 
             
             CREATE TABLE EventTable (
                 EventID INTEGER,
@@ -107,7 +106,7 @@ async function initiateAllTable() {
                 DT DATE,
                 PRIMARY KEY(EventID)
             )
-            INSERT INTO EventTable (100, “Celebrating the Community Garden’s 25th Anniversary”,”7-09-23")
+            INSERT INTO EventTable (100, “Celebrating the Community Garden’s 25th Anniversary”,”7-09-23”)
             
             CREATE TABLE RequiresTable
             (
@@ -148,7 +147,7 @@ async function initiateAllTable() {
                 PersonName VARCHAR(50)
                     PRIMARY KEY (SIN),
             )
-            INSERT INTO CommunityMember(“823709808", "Kratika”)
+            INSERT INTO CommunityMember(“823709808”, “Kratika”)
             
             CREATE TABLE BuildingTable
             (
@@ -284,6 +283,7 @@ async function initiateAllTable() {
         return false;
     });
 }
+
 
 
 
