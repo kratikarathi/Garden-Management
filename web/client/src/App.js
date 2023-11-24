@@ -3,6 +3,13 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import * as PropTypes from "prop-types";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+import Dashboard from "./Dashboard"
 
 //port that our backend uses
 const PORT = process.env.REACT_APP_API_PORT;
@@ -36,13 +43,24 @@ function App() {
       <header className="App-header">
           <h1> Community Garden Login Page </h1>
           <Toolbar
-              onLogin={() => alert('Loging in!')}
+              onLogin={(toDash) => alert('Loging in!')}
           />
         <img src={logo} className="App-logo" alt="logo" />
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
     </div>
   );
+}
+
+function toDash() {
+    return (
+        <Router>
+            <Route
+                path="/dashboard"
+                element={<Dashboard />}
+            />
+        </Router>
+    );
 }
 
 function Toolbar({ onLogin}) {
