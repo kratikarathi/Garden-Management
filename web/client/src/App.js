@@ -2,7 +2,6 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-//sample came from here: https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/
 import * as PropTypes from "prop-types";
 import {
     BrowserRouter as Router,
