@@ -9,7 +9,7 @@
     "install-server": "cd server && npm install",
     "install-client": "cd client && npm install",
     "build-client": "cd client && npm run build",
-    "install-all":"run-s install-client install-server",
+    "install-all": "run-s install-client install-server",
     "dev": "run-p start-server start-client"
   },
   "keywords": [],
@@ -18,7 +18,6 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "npm-run-all": "^4.1.5",
-    "react-router-dom": "^6.20.0",
     "zlib-sync": "^0.1.9"
   }
 }

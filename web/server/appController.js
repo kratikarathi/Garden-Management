@@ -15,6 +15,16 @@ router.get('/check-db-connection', async (req, res) => {
     }
 });
 
+router.get('/reset-tables', async (req, res) => {
+    const result = await initiateTables();
+    res.send('SQL statements executed successfully.');
+    if(result) {
+        
+    }else {
+        res.status(500).json({success:false});
+    }
+});
+
 router.get('/demotable', async (req, res) => {
     const tableContent = await appService.fetchDemotableFromDb();
     res.json({data: tableContent});
