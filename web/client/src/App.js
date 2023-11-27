@@ -11,6 +11,7 @@ import {
     Navigate,
 } from "react-router-dom";
 import Dashboard from "./Dashboard"
+import ResetButton from "./ResetButton";
 
 //port that our backend uses
 const PORT = process.env.REACT_APP_API_PORT;
@@ -42,10 +43,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-          <h1> Community Garden Login Page </h1>
-          <Toolbar
-              onLogin={(toDash) => alert('Loging in!')}
-          />
+          <h1> Community Garden </h1>
+          <ResetButton />
         <img src={logo} className="App-logo" alt="logo" />
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>

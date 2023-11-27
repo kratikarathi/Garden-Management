@@ -20,8 +20,8 @@ router.get('/demotable', async (req, res) => {
     res.json({data: tableContent});
 });
 
-router.post("/initiate-demotable", async (req, res) => {
-    const initiateResult = await appService.initiateDemotable();
+router.post("/initiate-tables", async (req, res) => {
+    const initiateResult = await appService.initiateTables();
     if (initiateResult) {
         res.json({ success: true });
     } else {
