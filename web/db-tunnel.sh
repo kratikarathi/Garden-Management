@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to the directory where the script is located
-cd "$(dirname "$0")"
+cd "$(/Users/kratikarathi/Downloads/CPSC304/Project/web "$0")"
 
 # File path
 ENV_FILE_PATH="./.env"

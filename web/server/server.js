@@ -35,6 +35,10 @@ app.use('/api', appController);
 
 // ----------------------------------------------------------
 // Starting the server
+app.get('/pi/data',(req,res) => {
+    const data = { message: "Hello from backend!" };
+    res.json(data);
+});
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
 });
