@@ -6,93 +6,72 @@ DROP TABLE Animal;
 DROP TABLE Building;
 DROP TABLE PlotOwner;
 DROP TABLE Gardener;
+DROP TABLE Plant;
 DROP TABLE Plot;
-DROP TABLE Areas;
+DROP TABLE PlantInformation;
 DROP TABLE CommunityMember;
 DROP TABLE AnimalInstructions;
 DROP TABLE ToolInfo;
 DROP TABLE SupplyInformation;
-DROP TABLE PlotPrices;
 DROP TABLE Event;
-
 CREATE TABLE Event (
     EventID INTEGER,
     EventDescription VARCHAR(200),
     DT DATE,
     PRIMARY KEY (EventID)
 );
-
-CREATE TABLE ToolInfo (
-    Model VARCHAR(50),
-    Make VARCHAR(50),
-    ToolDescription VARCHAR(200),
-    ToolCost INTEGER,
-    PRIMARY KEY (Model, Make)
-);
-
 CREATE TABLE SupplyInformation (
     SupplyType VARCHAR(20),
     SupplyCost INTEGER,
     Instructions VARCHAR(200),
     PRIMARY KEY (SupplyType)
 );
-
-CREATE TABLE AnimalInstructions (
-    Species VARCHAR(50),
-    FeedInstructions VARCHAR(200),
-    PRIMARY KEY (Species)
-);
-
 CREATE TABLE Building (
     BuildingName VARCHAR(50),
     Capacity INTEGER,
-    BuildingLocation VARCHAR(50),
     DoorCode CHAR(4),
+    Width INTEGER,
+    Height INTEGER,
+    xCoord INTEGER,
+    yCoord INTEGER,
     PRIMARY KEY (BuildingName)
 );
-
-CREATE TABLE PlotPrices (
-    Area INTEGER,
-    RentalPrice INTEGER,
-    PRIMARY KEY (Area)
-);
-
 CREATE TABLE CommunityMember (
     SIN char(9),
     PersonName VARCHAR(50),
     PRIMARY KEY (SIN)
 );
-
-CREATE TABLE Areas (
-    Width INTEGER,
-    Height INTEGER,
-    Area INTEGER,
-    PRIMARY KEY(Width, Height),
-    FOREIGN KEY (Area) REFERENCES PlotPrices(Area) ON DELETE CASCADE
+CREATE TABLE PlantInformation (
+    PlantName VARCHAR(50),
+    Instructions VARCHAR(200),
+    PlantType VARCHAR(50),
+    GrowthDays INTEGER,
+    PRIMARY KEY (PlantName)
 );
-
 CREATE TABLE Plot (
     PlotID INTEGER,
     Width INTEGER,
     Height INTEGER,
-    PlantType VARCHAR(50),
+    xCoord INTEGER,
+    yCoord INTEGER,
+    PlantName VARCHAR(50),
     SIN CHAR(9),
+    Price INTEGER,
     PRIMARY KEY (PlotID),
-    FOREIGN KEY (Width, Height) REFERENCES Areas (Width, Height),
-    FOREIGN KEY (SIN) REFERENCES CommunityMember (SIN)
+    FOREIGN KEY (SIN) REFERENCES CommunityMember (SIN),
+    FOREIGN KEY (PlantName) REFERENCES PlantInformation (PlantName)
 );
-
-CREATE TABLE Tool (
-    ToolID INTEGER,
-    Model VARCHAR(50),
-    Make VARCHAR(50),
-    LastMaintenance DATE,
-    BuildingName VARCHAR(50),
-    PRIMARY KEY (ToolID),
-    FOREIGN KEY (Model, Make) REFERENCES ToolInfo (Model, Make),
-    FOREIGN KEY (BuildingName) REFERENCES building (BuildingName) ON DELETE CASCADE
+CREATE TABLE Plant (
+    PlantID INTEGER,
+    PlotID INTEGER,
+    PlantName VARCHAR(50),
+    PlantDate DATE DEFAULT SYSDATE,
+    HarvestDate DATE DEFAULT NULL,
+    HarvestWeight INTEGER DEFAULT NULL,
+    PRIMARY KEY (PlantID),
+    FOREIGN KEY (PlotID) REFERENCES Plot (PlotID),
+    FOREIGN KEY (PlantName) REFERENCES PlantInformation (PlantName)
 );
-
 CREATE TABLE Supply (
     SupplyID INTEGER,
     SupplyType VARCHAR(20),
@@ -100,9 +79,8 @@ CREATE TABLE Supply (
     SupplyCount INTEGER,
     PRIMARY KEY (SupplyID),
     FOREIGN KEY (SupplyType) REFERENCES SupplyInformation (SupplyType),
-    FOREIGN KEY (BuildingName) REFERENCES building (BuildingName) ON DELETE CASCADE
+    FOREIGN KEY (BuildingName) REFERENCES Building (BuildingName) ON DELETE CASCADE
 );
-
 CREATE TABLE PlotOwner (
     SIN CHAR(9),
     PhoneNum CHAR(10),
@@ -111,55 +89,41 @@ CREATE TABLE PlotOwner (
     FOREIGN KEY (PlotID) REFERENCES Plot (PlotID) ON DELETE CASCADE,
     FOREIGN KEY (SIN) REFERENCES CommunityMember (SIN) ON DELETE CASCADE
 );
-
 CREATE TABLE Gardener (
     SIN CHAR(9),
     HoursWorked INTEGER,
     PRIMARY KEY (SIN),
     FOREIGN KEY (SIN) REFERENCES CommunityMember (SIN) ON DELETE CASCADE
 );
-
 CREATE TABLE PlotTask (
     TaskNum INTEGER,
     PlotID INTEGER,
     TaskDescription VARCHAR(200),
     Deadline DATE,
     SIN CHAR(9),
+    Status VARCHAR(20) DEFAULT 'Incomplete',
     PRIMARY KEY (TaskNum, PlotID),
     FOREIGN KEY (PlotID) REFERENCES Plot (PlotID) ON DELETE CASCADE,
-    FOREIGN KEY (SIN) REFERENCES Gardener (SIN) ON DELETE SET NULL
+    FOREIGN KEY (SIN) REFERENCES Gardener (SIN) ON DELETE
+    SET NULL
 );
-
 CREATE TABLE Animal (
     AnimalName VARCHAR(20),
     Species VARCHAR(50),
     BuildingName VARCHAR(200),
     PRIMARY KEY (AnimalName),
-    FOREIGN KEY (Species) REFERENCES AnimalInstructions (Species),
-    FOREIGN KEY (BuildingName) REFERENCES building (BuildingName) ON DELETE SET NULL
+    FOREIGN KEY (BuildingName) REFERENCES building (BuildingName) ON DELETE
+    SET NULL
 );
-
 CREATE TABLE Requires (
     TaskNum INTEGER,
     PlotID INTEGER,
-    SupplyID INTEGER,
-    ToolID INTEGER,
-    PRIMARY KEY (TaskNum, PlotID, SupplyID, ToolID),
-    FOREIGN KEY (TaskNum,PlotID) REFERENCES PlotTask (TaskNum,PlotID) ON DELETE CASCADE,
-    FOREIGN KEY (SupplyID) REFERENCES Supply (SupplyID) ON DELETE SET NULL,
-    FOREIGN KEY (ToolID) REFERENCES Tool (ToolID) ON DELETE SET NULL
+    SupplyType VARCHAR(20),
+    PRIMARY KEY (TaskNum, PlotID, SupplyType),
+    FOREIGN KEY (TaskNum, PlotID) REFERENCES PlotTask (TaskNum, PlotID) ON DELETE CASCADE,
+    FOREIGN KEY (SupplyType) REFERENCES SupplyInformation (SupplyType) ON DELETE
+    SET NULL
 );
-
-INSERT INTO PlotOwner
-values ('888789888', 2368634471, 23);
-INSERT INTO PlotOwner
-values ('887515887', 2366744768, 40);
-INSERT INTO PlotOwner
-values ('895565895', 6045698761, 10);
-INSERT INTO PlotOwner
-values ('818786876', 2368634471, 55);
-INSERT INTO PlotOwner
-values ('823709808', 2368634471, 83);
 INSERT INTO CommunityMember
 values ('823709808', 'Kratika');
 INSERT INTO CommunityMember
@@ -178,6 +142,90 @@ INSERT INTO CommunityMember
 values ('455334346', 'Emily');
 INSERT INTO CommunityMember
 values ('416578443', 'Will');
+INSERT INTO PlantInformation
+VALUES (
+        'Tomato',
+        'Water 1 time per day',
+        'Vegetable',
+        70
+    );
+INSERT INTO PlantInformation
+VALUES ('Basil', 'Water 2 times per week', 'Herb', 60);
+INSERT INTO PlantInformation
+VALUES (
+        'Lettuce',
+        'Water 1 time per day',
+        'Vegetable',
+        30
+    );
+INSERT INTO PlantInformation
+VALUES (
+        'Lavender',
+        'Water 1-2 times per week',
+        'Flower',
+        90
+    );
+INSERT INTO PlantInformation
+VALUES (
+        'Cucumber',
+        'Water 1 time per day',
+        'Vegetable',
+        50
+    );
+INSERT INTO PlantInformation
+VALUES ('Chives', 'Water 2 times per week', 'Herb', 30);
+INSERT INTO PlantInformation
+VALUES (
+        'Bell Pepper',
+        'Water 1 time per day',
+        'Vegetable',
+        60
+    );
+INSERT INTO PlantInformation
+VALUES (
+        'Strawberry',
+        'Water 1 time per day',
+        'Fruit',
+        90
+    );
+INSERT INTO PlantInformation
+VALUES (
+        'Squash',
+        'Water 1 time every 2-3 days',
+        'Vegetable',
+        60
+    );
+INSERT INTO Plot
+values (1, 20, 10, 10, 10, 'Tomato', '823709808', 8000);
+INSERT INTO Plot
+values (2, 20, 10, 10, 40, 'Basil', '895565895', 8000);
+INSERT INTO Plot
+values (
+        3,
+        10,
+        20,
+        40,
+        20,
+        'Strawberry',
+        '818786876',
+        10000
+    );
+INSERT INTO Plot
+values (4, 10, 20, 60, 20, 'Squash', '887515887', 5000);
+INSERT INTO Plot
+values (5, 10, 20, 70, 20, 'Chives', '888789888', 12000);
+INSERT INTO Plot
+values (6, 10, 20, 70, 20, NULL, NULL, 16000);
+INSERT INTO PlotOwner
+values ('888789888', '2368634471', 5);
+INSERT INTO PlotOwner
+values ('887515887', '2366744768', 4);
+INSERT INTO PlotOwner
+values ('895565895', '6045698761', 2);
+INSERT INTO PlotOwner
+values ('818786876', '2368634471', 3);
+INSERT INTO PlotOwner
+values ('823709808', '2368634471', 1);
 INSERT INTO Gardener
 values ('475385473', 0);
 INSERT INTO Gardener
@@ -185,265 +233,208 @@ values ('564556334', 13);
 INSERT INTO Gardener
 values ('455334346', 13);
 INSERT INTO Gardener
-values ('81886876', 30);
+values ('818786876', 30);
 INSERT INTO Gardener
-values ('82370908', 25);
+values ('823709808', 25);
 INSERT INTO PlotTask
 values (
-        12,
-        83,
-        'Water all the Tomato Plants',
-        '20-10-23',
-        '475385473'
+        1,
+        1,
+        'Water',
+        TO_DATE('20-10-23', 'DD-MM-YY'),
+        '475385473',
+        'Complete'
     );
 INSERT INTO PlotTask
 values (
         1,
-        10,
-        'Remove all Weeds',
-        '19-10-23',
-        '823709808'
+        2,
+        'Plant',
+        TO_DATE('19-10-23', 'DD-MM-YY'),
+        '823709808',
+        'Complete'
     );
 INSERT INTO PlotTask
 values (
-        55,
-        55,
-        'Harvest Fruits',
-        '19-10-23',
-        '455334346'
+        1,
+        3,
+        'Harvest',
+        TO_DATE('19-10-23', 'DD-MM-YY'),
+        '455334346',
+        'Complete'
     );
 INSERT INTO PlotTask
 values (
+        2,
+        1,
+        'Harvest',
+        TO_DATE('25-10-23', 'DD-MM-YY'),
+        '455334346',
+        'Complete'
+    );
+INSERT INTO PlotTask
+values (
+        3,
+        1,
+        'Weed',
+        TO_DATE('01-11-23', 'DD-MM-YY'),
+        '455334346',
+        'Complete'
+    );
+
+
+
+
+INSERT INTO Building
+values ('Chicken Coop', 20, NULL, 10, 10, 10, 10);
+INSERT INTO Building
+values ('Gazebo', 4, NULL, 3, 3, 47, 47);
+INSERT INTO Building
+values (
+        'Barn',
         100,
-        40,
-        'Harvest Fruits',
-        '25-10-23',
-        '455334346'
+        '3759',
+        10,
+        25,
+        30,
+        0
     );
-INSERT INTO PlotTask
-values (58, 55, 'Replant Seeds', '01-11-23', '455334346');
-INSERT INTO AnimalInstructions
+INSERT INTO Building
 values (
-        'Taby Cat',
-        'Do not feed, exclusively hunts mice'
+        'East Shed',
+        50,
+        '2744',
+        30,
+        25,
+        0,
+        50
     );
-INSERT INTO AnimalInstructions
-values ('Black Cat', 'cat food in barn, one scoop');
-INSERT INTO AnimalInstructions
-values ('Squirrel', 'Do not give squirrels bird feed');
-INSERT INTO AnimalInstructions
-values ('Bird', 'bird feed on top right corner of shed');
-INSERT INTO AnimalInstructions
+INSERT INTO Building
 values (
-        'Dog',
-        'dogs can have scrap produce from compost bin'
-    );
-INSERT INTO AnimalInstructions
-values (
-        'Chicken',
-        'fill chicken feed tray with chicken feed every morning'
+        'West Shed',
+        50,
+        '3644',
+        30,
+        25,
+        75,
+        50
     );
 INSERT INTO Animal
-values ('fatty the fat cat', 'Taby Cat', 'Barn');
+values ('Fatty', 'Taby Cat', 'Barn');
 INSERT INTO Animal
-values ('nightmare', 'Black Cat', null);
+values ('Nightmare', 'Black Cat', null);
 INSERT INTO Animal
 values ('Rufus', 'Dog', 'Barn');
 INSERT INTO Animal
 values ('Zoe', 'Dog', 'Barn');
 INSERT INTO Animal
 values ('Princess Peck', 'Chicken', 'Chicken Coop');
-INSERT INTO Supply
-values (1, 'Cat Food', 'Barn', 5);
-INSERT INTO Supply
-values (2, 'Tomato Seed Pack', 'East Shed', 15);
-INSERT INTO Supply
-values (3, 'Magic Bean Sprouts', 'East Shed', 2);
-INSERT INTO Supply
-values (4, 'Fertilizer bag', 'West Shed', 10);
-INSERT INTO Supply
-values (5, 'Watering Can', 'Gazebo', 2);
 INSERT INTO SupplyInformation
-values (
-        'Tomato Seed Pack',
-        200,
-        'Plant handful in fertilizer, water once per day'
+VALUES ('Seeds', 850, 'Store in a cool, dry place');
+INSERT INTO SupplyInformation
+VALUES (
+        'Fertilizer',
+        1499,
+        'Follow instructions on the package'
     );
 INSERT INTO SupplyInformation
-values ('Magic Beans', 3000, 'plant and pray');
+VALUES ('Gloves', 699, 'Keeps your hands clean!');
 INSERT INTO SupplyInformation
-values ('Cat Food', 5000, null);
-INSERT INTO SupplyInformation
-values (
-        'Fertilizer bag',
-        2000,
-        'Add to new plot before planting'
-    );
-INSERT INTO SupplyInformation
-values (
+VALUES (
         'Watering Can',
-        1000,
-        'Water plants according to watering instructions'
+        2499,
+        'Check for leaks and clean regularly'
     );
-INSERT INTO Building
-values ('Chicken Coop', 30, 'east side of barn', null);
-INSERT INTO Building
-values (
-        'Gazebo',
-        50,
-        'middle of the community garden',
-        null
+INSERT INTO SupplyInformation
+VALUES (
+        'Paddle Hoe',
+        11699,
+        'Use a broad, fluid sweeping motion to slice weeds.  Clean after use'
     );
-INSERT INTO Building
-values (
-        'Barn',
-        45,
-        'northmost end of community garden',
-        '3759'
+INSERT INTO SupplyInformation
+VALUES (
+        'Dutch Hoe',
+        18999,
+        'Draw the tip of the hoe handle down the row to create a shallow furrow for shallow-planted seeds.  Clean after use'
     );
-INSERT INTO Building
-values (
-        'East Shed',
-        60,
-        'east end of the garden',
-        '2744'
+INSERT INTO SupplyInformation
+VALUES (
+        'Shears',
+        1799,
+        'Use to cut and shape plants.  Careful not to cut any fingers!'
     );
-INSERT INTO Building
-values (
-        'West Shed',
-        60,
-        'west end of the garden',
-        '3664'
+INSERT INTO SupplyInformation
+VALUES (
+        'Chicken Feed',
+        2499,
+        'Put 1 scoop of feed per chicken per day in the feeder.'
     );
-INSERT INTO ToolInfo
-values (
-        'Firebolt 500',
-        'Wizarding Tools',
-        'Shovel',
-        50000
-    );
-INSERT INTO ToolInfo
-values ('Nimbus 2000', 'Wizarding Tools', 'Axe', 100000);
-INSERT INTO ToolInfo
-values (
-        'Golden Snitch',
-        'Grindlock’s Farming World',
-        'Plough',
-        250000
-    );
-INSERT INTO ToolInfo
-values (
-        'Zeus Power',
-        'Pete’s Farming Tool',
-        'Rake',
-        150000
-    );
-INSERT INTO ToolInfo
-values (
-        'Poseidon Water Hose',
-        'Greek Farming Supplies',
-        'Hose',
-        5100000
-    )
-INSERT INTO Tool
-values (
-        3,
-        'Firebolt 500',
-        'Wizarding Tools',
-        '13-12-2002',
-        'East Shed'
-    );
-INSERT INTO Tool
-values (
-        10,
-        'Poseidon Water Hose',
-        'Greek Farming Supplies',
-        '16-06-2012',
-        'East Shed'
-    );
-INSERT INTO Tool
-values (
-        50,
-        'Zeus Power',
-        'Petes Farming Tool',
-        '13-01-2020',
-        'West Shed'
-    );
-INSERT INTO Tool
-values (
-        100,
-        'Golden Snitch',
-        'Grindlock’s Farming World',
-        '13-10-2023',
-        'West Shed'
-    );
-INSERT INTO Tool
-values (
-        76,
-        'Nimbus 2000',
-        'Wizarding Tools',
-        '19-05-2018',
-        'West Shed'
-    );
-INSERT INTO PlotPrices
-values (2300, 98000000);
-INSERT INTO PlotPrices
-values (150, 100000);
-INSERT INTO PlotPrices
-values (2300, 98000000);
-INSERT INTO PlotPrices
-values (1500, 1000000);
-INSERT INTO PlotPrices
-values (1110, 9000000);
-INSERT INTO Areas
-values (23, 100, 2300);
-INSERT INTO Areas
-values (15, 10, 150);
-INSERT INTO Areas
-values (111, 10, 1110);
-INSERT INTO Areas
-values (15, 100, 1500);
-INSERT INTO Areas
-values (23, 100, 2300);
-INSERT INTO Requires
-values (12, 83, null, 10);
-INSERT INTO Requires
-values (1, 10, null, 50);
-INSERT INTO Requires
-values (58, 55, 2, 100);
-INSERT INTO Requires
-values (58, 55, 2, 50);
-INSERT INTO Requires
-values (58, 55, null, 3);
-INSERT INTO Plot
-values (83, 15, 10, 'Tomatoes', '823709808');
-INSERT INTO Plot
-values (10, 111, 10, 'Tomatoes', '895565895');
-INSERT INTO Plot
-values (55, 23, 100, 'Strawberries', '818786876');
-INSERT INTO Plot
-values (40, 15, 100, 'Tomatoes', '887515887');
-INSERT INTO Plot
-values (23, 23, 100, 'Magic Beans', '888789888');
+INSERT INTO Supply
+VALUES (1, 'Seeds', 'Barn', 10);
+INSERT INTO Supply
+VALUES (2, 'Fertilizer', 'Barn', 17);
+INSERT INTO Supply
+VALUES (3, 'Gloves', 'East Shed', 15);
+INSERT INTO Supply
+VALUES (4, 'Watering Can', 'East Shed', 4);
+INSERT INTO Supply
+VALUES (5, 'Paddle Hoe', 'West Shed', 1);
+INSERT INTO Supply
+VALUES (6, 'Dutch Hoe', 'West Shed', 1);
+INSERT INTO Supply
+VALUES (7, 'Chicken Feed', 'Chicken Coop', 18);
+INSERT INTO Supply
+VALUES (8, 'Shears', 'East Shed', 2);
+INSERT INTO Supply
+VALUES (9, 'Seeds', 'West Shed', 12);
+INSERT INTO Supply
+VALUES (10, 'Dutch Hoe', 'Barn', 2);
+
 INSERT INTO Event
 values (
-        100,
+        5,
         'Celebrating the Community Gardens 25th Anniversary',
-        '7-09-23'
+        TO_DATE('7-09-23', 'DD-MM-YY')
     );
 INSERT INTO Event
 values (
         1,
         'Ribbon Cutting at the Community Garden',
-        '7-09-89'
+        TO_DATE('7-09-89', 'DD-MM-YY')
     );
-INSERT INTO Event
-values (25, 'Opening of the Barn Building', '01-01-2016');
-INSERT INTO Event
-values (65, 'Tommys 7th Birthday Party', '23-04-2020');
 INSERT INTO Event
 values (
-        12,
-        'Farming Workshop for Beginners',
-        '05-11-2006'
+        2,
+        'Opening of the Barn Building',
+        TO_DATE('01-01-2016', 'DD-MM-YY')
     );
+INSERT INTO Event
+values (
+        4,
+        'Tommys 7th Birthday Party',
+        TO_DATE('23-04-2020', 'DD-MM-YY')
+    );
+INSERT INTO Event
+values (
+        3,
+        'Farming Workshop for Beginners',
+        TO_DATE('05-11-2006', 'DD-MM-YY')
+    );
+INSERT INTO Requires
+values (1, 1, 'Watering Can');
+INSERT INTO Requires
+values (1, 2, 'Fertilizer');
+INSERT INTO Requires
+values (1, 2, 'Watering Can');
+INSERT INTO Requires
+values (1, 2, 'Dutch Hoe');
+INSERT INTO Requires
+values (1, 3, 'Shears');
+INSERT INTO Requires
+values (1, 3, 'Gloves');
+INSERT INTO Requires
+values (2, 1, 'Gloves');
+INSERT INTO Requires
+values (2, 1, 'Paddle Hoe');
+INSERT INTO Requires
+values (2, 1, 'Shears');

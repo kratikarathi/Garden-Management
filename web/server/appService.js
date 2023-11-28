@@ -45,7 +45,7 @@ async function testOracleConnection() {
 //function to read file with drop,create and insert statement
 const fs = require('fs').promises
 
-async function initiateTables() {
+async function resetTables() {
     try {
         const filePath = './utils/initiate.sql';
 
@@ -146,7 +146,7 @@ async function countDemotable() {
 module.exports = {
     testOracleConnection,
     //fetchDemotableFromDb,
-    initiateTables,
+    resetTables,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable

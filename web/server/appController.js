@@ -16,12 +16,12 @@ router.get('/check-db-connection', async (req, res) => {
 });
 
 router.get('/reset-tables', async (req, res) => {
-    const result = await initiateTables();
-    res.send('SQL statements executed successfully.');
+    const result = await appService.resetTables();
+   
     if(result) {
-        
+        res.send('Tables successfully reset.');
     }else {
-        res.status(500).json({success:false});
+        res.status(500).send('Failed to reset tables.');
     }
 });
 

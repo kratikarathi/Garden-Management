@@ -17,12 +17,6 @@ const PORT = process.env.REACT_APP_API_PORT;
 const URL = "http://localhost:" + PORT + "/api"; //URL of our backend
 
 console.log("API URL is: " + URL);
-/*
-
-function Button(props) {
-  return null;
-}
-*/
 
 Button.propTypes = {
   onPress: PropTypes.any,
