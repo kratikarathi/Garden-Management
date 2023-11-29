@@ -213,7 +213,7 @@ values (
 INSERT INTO Plot
 values (4, 10, 20, 60, 20, 'Squash', '887515887', 5000);
 INSERT INTO Plot
-values (5, 10, 20, 70, 20, 'Chives', '888789888', 12000);
+values (5, 10, 20, 50, 20, 'Chives', '888789888', 12000);
 INSERT INTO Plot
 values (6, 10, 20, 70, 20, NULL, NULL, 16000);
 INSERT INTO PlotOwner

@@ -12,7 +12,7 @@ const FarmMap = () => {
               .then((plots) => setPlots(plots));
           }, []);
           const plotRows = plots?.data?.rows;
-
+          var scale = 5.0;
           return (
             <div className="farm-map">
                 {plotRows ? ( plotRows.map(plot => {
@@ -21,10 +21,10 @@ const FarmMap = () => {
                                 key={plot[0]}
                                 className="plot"
                                 style={{
-                                    left: `${plot[3]}%`,
-                                    top: `${plot[4]}%`,
-                                    width: `${plot[1]}%`,
-                                    height: `${plot[2]}%`
+                                    left: `${plot[3]*scale}px`,
+                                    top: `${plot[4]*scale}px`,
+                                    width: `${plot[1]*scale}px`,
+                                    height: `${plot[2]*scale}px`
                                 }}
                             >
                             <p>{plot[0]}</p>
