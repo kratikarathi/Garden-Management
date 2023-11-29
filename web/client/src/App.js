@@ -3,10 +3,10 @@ import React from "react";
 import "./App.css";
 import * as PropTypes from "prop-types";
 import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
 } from "react-router-dom";
 import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
@@ -36,44 +36,51 @@ function App() {
 
   return (
     <div className="App">
+      <header className = "App-toolbar">
+      <ResetButton />
+      </header>
+      
       <header className="App-header">
-          <h1> Community Garden </h1>
-          <ResetButton />
-          <PlantButton />
+        <h1> Community Garden </h1>
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
+      <body className="App-body">
+        <PlantButton />
+      </body>
+      
+
     </div>
   );
 }
 
 function toDash() {
-    return (
-        <Router>
-            <Route
-                path="/dashboard"
-                element={<Dashboard />}
-            />
-        </Router>
-    );
+  return (
+    <Router>
+      <Route
+        path="/dashboard"
+        element={<Dashboard />}
+      />
+    </Router>
+  );
 }
 
-function Toolbar({ onLogin}) {
+function Toolbar({ onLogin }) {
   return (
-      <div>
-          <h3> Enter email </h3>
-          <input name="myInput" />
-        <Button onClick={onLogin}>
-          LOGIN
-        </Button>
-      </div>
+    <div>
+      <h3> Enter email </h3>
+      <input name="myInput" />
+      <Button onClick={onLogin}>
+        LOGIN
+      </Button>
+    </div>
   );
 }
 
 function Button({ onClick, children }) {
   return (
-      <button onClick={onClick}>
-        {children}
-      </button>
+    <button onClick={onClick}>
+      {children}
+    </button>
   );
 }
 

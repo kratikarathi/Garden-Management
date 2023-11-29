@@ -31,6 +31,20 @@ async function withOracleDB(action) {
 }
 
 
+async function getTableNames() {
+    console.log("Getting list of all Tables");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT table_name FROM user_tables
+        `
+        );
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 // ----------------------------------------------------------
 // Core functions for database operations
 // Modify these functions, especially the SQL queries, based on your project's requirements and design.
@@ -59,6 +73,7 @@ async function getPlots() {
         const result = await connection.execute(`
         SELECT * From Plot
         `
+        
         );
         return result;
     }).catch(() => {
@@ -199,6 +214,7 @@ module.exports = {
     getPlots,
     updatePlots,
     getPlotTasksStatus,
+    getTableNames
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './PlantButton.css';
-
+import Table from "./Table";
 const PORT = process.env.REACT_APP_API_PORT;
 const URL = `http://localhost:${PORT}/api`; // URL of our backend
 
@@ -9,12 +9,6 @@ const PlantButton = () => {
     const [error, setError] = useState(null);
     const [tasks, setTasks] = useState(null);
 
-    useEffect(() => {
-        fetch(`${URL}/get-plot-tasks`)
-            .then((res) => res.json())
-            .then((tasks) => setTasks(tasks))
-            .catch((err) => console.error('Error fetching tasks:', err));
-    }, []); // Add URL to the dependency array
 
     const GetPlotTasks = () => {
         setResult('Viewing...');
@@ -24,7 +18,7 @@ const PlantButton = () => {
                 if (!response.ok) {
                     throw new Error('status: ' + response.status);
                 }
-                return response.text();
+                return response.json();
             })
             .then((text) => {
                 setResult(text);
@@ -56,7 +50,7 @@ const PlantButton = () => {
     return (
         <div className='plant-button'>
             <button onClick={GetPlotTasks}>View Plot Task Info</button>
-            {result && <div className='result' style={{ color: 'green' }}>{result}</div>}
+            {result && <Table tableData={result}/>}
             {error && <div className='result' style={{ color: 'red' }}>Error: {error}</div>}
         </div>
     );

@@ -43,6 +43,14 @@ router.get('/get-plots', async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
+router.get('/get-table-names', async (req, res) => {
+    try {
+         const result = await appService.getTableNames();
+         res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
 
 router.get('/reset-tables', async (req, res) => {
     const result = await appService.resetTables();

@@ -1,11 +1,3 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -13,20 +5,45 @@
   }
 }
 
-.App-header {
+.App {
   background-color: #282c34;
-  min-height: 100vh;
+}
+.App-body{
+  height:75vh;
+  margin-top: 5vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(5px + 1vmin);
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.App-toolbar {
+  background-color: #2e2e2e;
+  min-height: 5vh;
+  max-height: 5vh;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
 }
+.App-header {
+  margin-top: 5vh;
+  text-align: center;
+  background-color: #282c34;
+  min-height: 15vh;
+  max-height: 15vh;
+  align-items: center;
+  color: white;
+}
+.Reset-button{
+  width: 100%;
+  height: 100%;
+}
+
+
 
 @keyframes App-logo-spin {
   from {
@@ -37,13 +54,4 @@
   }
 }
 
-.Reset-button {
-  position: absolute;
-  top: 0;
-  left: 15px;
-  width: 50px;
-  height: 10px;
-  margin-top: 10px;
-  font-size: 9px;
-}
 
