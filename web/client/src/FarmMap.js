@@ -11,10 +11,11 @@ const FarmMap = () => {
               .then((res) => res.json())
               .then((plots) => setPlots(plots));
           }, []);
+          const plotRows = plots?.data?.rows;
+
           return (
             <div className="farm-map">
-                {plots.data.rows ? (
-                    plots.data.rows.map(plot => {
+                {plotRows ? ( plotRows.map(plot => {
                         return (
                             <div
                                 key={plot[0]}
