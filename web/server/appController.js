@@ -15,6 +15,26 @@ router.get('/check-db-connection', async (req, res) => {
     }
 });
 
+router.post('/update-plots', async (req, res) => {
+    const { oldStatus, newStatus } = req.body;
+    const updateResult = await appService.updatePlots(oldStatus, newStatus);
+    if (updateResult) {
+        // res.json({ success: true });
+        res.send('good.');
+    } else {
+        // res.status(500).json({ success: false });
+        res.status(500).send('bad');
+    }
+});
+
+router.get('/get-plot-tasks', async (req, res) => {
+    try {
+        const result = await appService.getPlotTasksStatus();
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
 router.get('/get-plots', async (req, res) => {
     try {
          const result = await appService.getPlots();

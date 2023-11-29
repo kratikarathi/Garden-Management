@@ -65,8 +65,35 @@ async function getPlots() {
         return false;
     });
 
-return result;
 }
+
+async function getPlotTasksStatus() {
+    console.log("Getting plot tasks");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT TaskNum, Status From PlotTask
+        `
+        );
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function updatePlots(oldStatus, newStatus) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `UPDATE PlotTask SET status=:newStatus where status=:oldStatus`,
+            [newStatus, oldStatus],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
 
 async function resetTables() {
     try {
@@ -97,8 +124,6 @@ async function resetTables() {
         return false;
     }
 }
-
-
 
 /*async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
@@ -172,6 +197,8 @@ module.exports = {
     //fetchDemotableFromDb,
     resetTables,
     getPlots,
+    updatePlots,
+    getPlotTasksStatus,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable
