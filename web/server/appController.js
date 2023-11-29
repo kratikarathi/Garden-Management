@@ -15,7 +15,26 @@ router.get('/check-db-connection', async (req, res) => {
     }
 });
 
+router.get('/get-plots', async (req, res) => {
+    try {
+         const result = await appService.getPlots();
+         res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
+
 router.get('/reset-tables', async (req, res) => {
+    const result = await appService.resetTables();
+   
+    if(result) {
+        res.send('Tables successfully reset.');
+    }else {
+        res.status(500).send('Failed to reset tables.');
+    }
+});
+
+router.get('/insert-member', async (req, res) => {
     const result = await appService.resetTables();
    
     if(result) {

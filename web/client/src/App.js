@@ -38,7 +38,6 @@ function App() {
       <header className="App-header">
           <h1> Community Garden </h1>
           <ResetButton />
-        <img src={logo} className="App-logo" alt="logo" />
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
     </div>

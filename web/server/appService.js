@@ -45,6 +45,29 @@ async function testOracleConnection() {
 //function to read file with drop,create and insert statement
 const fs = require('fs').promises
 
+async function insertCommunityMember(Sin, Name, Email) {
+    const result = await connection.execute(`
+    INSERT INTO CommunityMember
+    VALUES (` + Sin + `,` + Name + `,` + Email + `)`
+);
+}
+
+
+async function getPlots() {
+
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT * From Plot
+        `
+        );
+        return result;
+    }).catch(() => {
+        return false;
+    });
+
+return result;
+}
+
 async function resetTables() {
     try {
         const filePath = './utils/initiate.sql';
@@ -74,6 +97,7 @@ async function resetTables() {
         return false;
     }
 }
+
 
 
 /*async function fetchDemotableFromDb() {
@@ -147,6 +171,7 @@ module.exports = {
     testOracleConnection,
     //fetchDemotableFromDb,
     resetTables,
+    getPlots,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable
