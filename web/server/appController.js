@@ -16,14 +16,16 @@ router.get('/check-db-connection', async (req, res) => {
 });
 
 router.post('/update-plots', async (req, res) => {
-    const { oldStatus, newStatus } = req.body;
-    const updateResult = await appService.updatePlots(oldStatus, newStatus);
+    const {oldNum, oldID, desc, sin, stat} = req.body;
+    console.log("Updating plot tasks router" + oldID + sin + stat);
+    console.log(req.body);
+    const updateResult = await appService.updatePlots(oldNum, oldID, desc, sin, stat);
     if (updateResult) {
         // res.json({ success: true });
-        res.send('good.');
+        res.send('them plots be updated.');
     } else {
         // res.status(500).json({ success: false });
-        res.status(500).send('bad');
+        res.status(500).send('not today dawg');
     }
 });
 

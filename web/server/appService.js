@@ -46,12 +46,11 @@ async function testOracleConnection() {
 const fs = require('fs').promises
 
 async function insertCommunityMember(Sin, Name, Email) {
-    const result = await connection.execute(`
-    INSERT INTO CommunityMember
-    VALUES (` + Sin + `,` + Name + `,` + Email + `)`
-);
+    const result = await connection.execute(
+        `INSERT INTO CommunityMember VALUES (:Sin, :Name, :Email)`,
+        { Sin, Name, Email }
+    );
 }
-
 
 async function getPlots() {
     console.log("Getting plots");
@@ -71,7 +70,7 @@ async function getPlotTasksStatus() {
     console.log("Getting plot tasks");
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-        SELECT TaskNum, Status From PlotTask
+        SELECT * From PlotTask
         `
         );
         return result;
@@ -80,11 +79,17 @@ async function getPlotTasksStatus() {
     });
 }
 
-async function updatePlots(oldStatus, newStatus) {
+async function updatePlots(oldNum, oldID, taskDesc, sinValue, statusValue) {
+    console.log("Updating plot tasks" + oldID + sinValue + statusValue);
+    console.log("Updating plot tasks");
     return await withOracleDB(async (connection) => {
+        console.log("Values:", oldNum, oldID, taskDesc, sinValue, statusValue);
+
         const result = await connection.execute(
-            `UPDATE PlotTask SET status=:newStatus where status=:oldStatus`,
-            [newStatus, oldStatus],
+            `UPDATE PlotTask 
+            SET TaskDescription = :taskDesc, SIN = :sinValue, status = :statusValue
+            WHERE PlotId = :oldID AND TaskNum = :oldNum`,
+            { oldNum, oldID, taskDesc, sinValue, statusValue },
             { autoCommit: true }
         );
 
