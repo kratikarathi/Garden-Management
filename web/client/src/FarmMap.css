@@ -1,0 +1,16 @@
+.farm-map {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    background-color: green;
+}
+
+.plot {
+    position: absolute;
+    border: 2px solid black;
+    background-color: #9B673C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

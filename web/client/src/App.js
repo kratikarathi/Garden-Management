@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
+import FarmMap from "./FarmMap";
 
 //port that our backend uses
 const PORT = process.env.REACT_APP_API_PORT;
@@ -38,6 +39,7 @@ function App() {
       <header className="App-header">
           <h1> Community Garden </h1>
           <ResetButton />
+          <FarmMap />
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
     </div>

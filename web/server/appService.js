@@ -54,7 +54,7 @@ async function insertCommunityMember(Sin, Name, Email) {
 
 
 async function getPlots() {
-
+    console.log("Getting plots");
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
         SELECT * From Plot
