@@ -20,10 +20,10 @@ const FarmMap = () => {
                                 key={plot[0]}
                                 className="plot"
                                 style={{
-                                    left: `${plot[2]}%`,
-                                    top: `${plot[3]}%`,
-                                    width: `${plot[0]}%`,
-                                    height: `${plot[1]}%`
+                                    left: `${plot[3]}%`,
+                                    top: `${plot[4]}%`,
+                                    width: `${plot[1]}%`,
+                                    height: `${plot[2]}%`
                                 }}
                             >
                             <p>{plot[0]}</p>
