@@ -1,6 +1,5 @@
 
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import * as PropTypes from "prop-types";
 import {
@@ -11,6 +10,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
+import PlantButton from "./PlantButton";
 import FarmMap from "./FarmMap";
 
 //port that our backend uses
@@ -39,7 +39,7 @@ function App() {
       <header className="App-header">
           <h1> Community Garden </h1>
           <ResetButton />
-          <FarmMap />
+          <PlantButton />
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
     </div>
@@ -63,7 +63,7 @@ function Toolbar({ onLogin}) {
           <h3> Enter email </h3>
           <input name="myInput" />
         <Button onClick={onLogin}>
-          LOGIN!
+          LOGIN
         </Button>
       </div>
   );
