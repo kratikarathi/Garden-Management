@@ -13,7 +13,7 @@ const FarmMap = () => {
           }, []);
           return (
             <div className="farm-map">
-                {plots ? (
+                {plots.data.rows ? (
                     plots.data.rows.map(plot => {
                         return (
                             <div
