@@ -180,6 +180,20 @@ async function resetTables() {
     }
 }
 
+async function insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO PlotTask VALUES (:TaskNum, :PlotID, :TaskDescription, :Deadline, :SIN, :Status)`,
+            {TaskNum, PlotID, TaskDescription, Deadline, SIN, Status},
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 /*async function fetchDemotableFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute('SELECT * FROM DEMOTABLE');
@@ -189,26 +203,6 @@ async function resetTables() {
     });
 }
 
-
-async function initiateDemotable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE ( 
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
 
 async function insertDemotable(id, name) {
     return await withOracleDB(async (connection) => {
@@ -251,6 +245,7 @@ module.exports = {
     testOracleConnection,
     //fetchDemotableFromDb,
     resetTables,
+    insertPlotTask,
     getPlots,
     updatePlots,
     getPlotTasksStatus,

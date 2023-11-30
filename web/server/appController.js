@@ -109,15 +109,17 @@ router.post("/initiate-tables", async (req, res) => {
     }
 });
 
-router.post("/insert-demotable", async (req, res) => {
-    const { id, name } = req.body;
-    const insertResult = await appService.insertDemotable(id, name);
+router.post("/insert-plottable", async (req, res) => {
+    const { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status } = req.body;
+    console.log(req.body);
+    const insertResult = await appService.insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status);
     if (insertResult) {
-        res.json({ success: true });
+        res.send({ success: true });
     } else {
         res.status(500).json({ success: false });
     }
 });
+
 
 router.post("/update-name-demotable", async (req, res) => {
     const { oldName, newName } = req.body;

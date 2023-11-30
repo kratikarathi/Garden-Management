@@ -12,6 +12,8 @@ import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
 import PlantButton from "./PlantButton";
 import FarmMap from "./FarmMap";
+import InsertButton from "./InsertButton";
+
 
 //port that our backend uses
 const PORT = process.env.REACT_APP_API_PORT;
@@ -34,12 +36,14 @@ function App() {
       .then((data) => setData(data));
   }, []);
 
+
   return (
     <div className="App">
       <header className="App-header">
           <h1> Community Garden </h1>
           <ResetButton />
           <PlantButton />
+          <InsertButton />
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
     </div>
