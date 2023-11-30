@@ -37,6 +37,16 @@ router.get('/get-plot-tasks', async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
+
+router.get('/get-tasks-by-plot', async (req, res) => {
+    // const {plotID} = req.params;
+    try {
+        const result = await appService.getTasksByPlot();
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
 router.get('/get-plots', async (req, res) => {
     try {
          const result = await appService.getPlots();

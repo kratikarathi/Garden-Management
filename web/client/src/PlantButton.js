@@ -29,10 +29,8 @@ const PlantButton = () => {
             .finally(() => setViewedTasks(true));
     };
 
-    const updatePlot = () => {
-        setResult('Viewing...');
-        setError(null);
-        fetch(`${URL}/update-plot`)
+    const groupByPlot = () => {
+        fetch(`${URL}/get-tasks-by-plot`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('status: ' + response.status);
@@ -43,7 +41,7 @@ const PlantButton = () => {
                 setResult(text);
             })
             .catch((err) => {
-                setError('not updating plot');
+                setError('Failed to group');
             });
     };
 
@@ -64,6 +62,13 @@ const PlantButton = () => {
 
                     <button type="submit">Update Plot Task Info</button><br/>
                 </form>
+            )}
+
+            {viewedTasks && (
+                <div className='group-by'>
+                    <h1> Check how many tasks are currently registered for each plot</h1>
+                    <button onClick={groupByPlot}> Search </button>
+                </div>
             )}
         </div>
     );

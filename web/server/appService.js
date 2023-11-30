@@ -79,6 +79,19 @@ async function getPlotTasksStatus() {
     });
 }
 
+async function getTasksByPlot() {
+    console.log("Getting tasks by plot id");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT PlotID, COUNT(TaskNum) From PlotTask GROUP BY PlotID
+        `
+        );
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function updatePlots(oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue) {
     console.log("Updating plot tasks" + oldID + sinValue + statusValue);
     console.log("Updating plot tasks");
@@ -204,6 +217,7 @@ module.exports = {
     getPlots,
     updatePlots,
     getPlotTasksStatus,
+    getTasksByPlot,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable
