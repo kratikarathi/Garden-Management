@@ -78,7 +78,7 @@ async function getPlotTasksStatus() {
         return false;
     });
 }
-
+// GROUP BY
 async function getTasksByPlot() {
     console.log("Getting tasks by plot id");
     return await withOracleDB(async (connection) => {
@@ -91,9 +91,9 @@ async function getTasksByPlot() {
         return false;
     });
 }
-
+// HAVING
 async function getPlotsHavingTasks() {
-    console.log("Getting tasks by plot id");
+    console.log("Getting plots that have tasks");
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
         SELECT TaskNum
@@ -107,7 +107,28 @@ async function getPlotsHavingTasks() {
         throw new Error('Failed: ' + e);
     });
 }
+// Find those buildings for which their average supply count is the
+// minimum over all buildings
+// nested GROUP BY
+async function getBuildingsSupplyCount() {
+    console.log("Getting tasks by plot id and ");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT BuildingName, avg(SupplyCount)
+        FROM Supply
+        GROUP BY BuildingName
+        HAVING avg(SupplyCount) <= all (SELECT AVG(SupplyCount)
+                                FROM Supply
+                                GROUP BY BuildingName)
+        `
+        );
+        return result;
+    }).catch((e) => {
+        throw new Error('Failed: ' + e);
+    });
+}
 
+// UPDATE
 async function updatePlots(oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue) {
     console.log("Updating plot tasks" + oldID + sinValue + statusValue);
     console.log("Updating plot tasks");
@@ -235,6 +256,7 @@ module.exports = {
     getPlotTasksStatus,
     getTasksByPlot,
     getPlotsHavingTasks,
+    getBuildingsSupplyCount,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable

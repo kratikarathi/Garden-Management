@@ -61,6 +61,22 @@ const PlantButton = () => {
             });
     };
 
+    const buildingSupplyCount = () => {
+        fetch(`${URL}/get-buildings-supply-count`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('status: ' + response.status);
+                }
+                return response.text();
+            })
+            .then((text) => {
+                setResult(text);
+            })
+            .catch((err) => {
+                setError('Failed to group');
+            });
+    };
+
     const updatePlotTasks = async () => {
         console.log("dog");
 
@@ -113,6 +129,11 @@ const PlantButton = () => {
             <button onClick={getPlotTasks}>View Plot Task Info</button>
             {result && <div className='result' style={{ color: 'green' }}>{result}</div>}
             {error && <div className='result' style={{ color: 'red' }}>Error: {error}</div>}
+
+            <div className='building'>
+                <h3> Search Building name with the minimum average supply count </h3>
+                <button onClick={buildingSupplyCount}> Search </button>
+            </div>
 
             {viewedTasks && (
                 <form id="updataPlotTasks" onSubmit={updatePlotTasks}>
