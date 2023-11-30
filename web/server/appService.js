@@ -44,6 +44,54 @@ async function getTableNames() {
     });
 }
 
+async function getTable(tableName) {
+    const query = `SELECT * FROM ${tableName}`
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getTableHeaders(tableName) {
+    const query = `SELECT COLUMN_NAME FROM ALL_TAB_COLUMNS
+                WHERE TABLE_NAME = '${tableName}'`
+                console.log(query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
+//Select and project columns[]
+async function projection(tableName, columns) {
+    console.log(columns);
+    const query = `SELECT ${columns.map(column => {return (column)})} FROM ${tableName}`
+    console.log(query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getTableNames() {
+    console.log("Getting list of all Tables");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT table_name FROM user_tables
+        `
+        );
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
 
 // ----------------------------------------------------------
 // Core functions for database operations
@@ -214,7 +262,10 @@ module.exports = {
     getPlots,
     updatePlots,
     getPlotTasksStatus,
-    getTableNames
+    getTableNames,
+    projection,
+    getTable,
+    getTableHeaders
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable

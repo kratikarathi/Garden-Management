@@ -12,6 +12,7 @@ import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
 import PlantButton from "./PlantButton";
 import FarmMap from "./FarmMap";
+import Projection from "./Projection";
 
 //port that our backend uses
 const PORT = process.env.REACT_APP_API_PORT;
@@ -26,6 +27,7 @@ Button.propTypes = {
   accessibilityLabel: PropTypes.string
 };
 
+
 function App() {
   const [data, setData] = React.useState(null);
   React.useEffect(() => {
@@ -39,13 +41,13 @@ function App() {
       <header className = "App-toolbar">
       <ResetButton />
       </header>
-      
+
       <header className="App-header">
         <h1> Community Garden </h1>
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
       <body className="App-body">
-        <PlantButton />
+        <Projection />
       </body>
       
 

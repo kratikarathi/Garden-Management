@@ -5,6 +5,8 @@ https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-
 
 https://www.geeksforgeeks.org/how-to-create-a-table-in-reactjs/
 
+https://www.simplilearn.com/tutorials/reactjs-tutorial/how-to-create-functional-react-dropdown-menu
+
 Changes:
 Denormalized plot areas because it was unnecessary
 Added Plant table to track individual plants, allowing us to gather harvest data.

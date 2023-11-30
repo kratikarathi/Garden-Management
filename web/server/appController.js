@@ -43,10 +43,46 @@ router.get('/get-plots', async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
-router.get('/get-table-names', async (req, res) => {
+
+router.post('/get-headers',async (req, res) => {
+    const {tableName} = req.body;
     try {
-         const result = await appService.getTableNames();
-         res.json({data: result});
+        const tableHeaders = await appService.getTableHeaders(tableName);
+        res.json({ headers: tableHeaders.rows });
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+
+});
+
+//provide tableName:and headers: and returns the table data projected onto those
+router.post('/projection',async (req, res) => {
+    const {tableName,headers} = req.body;
+    console.log(tableName,headers);
+    const projectedTable = await appService.projection(tableName,headers);
+    try {
+        res.json({ data: projectedTable });
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+
+});
+
+router.post('/get-table', async (req, res) => {
+    const {tableName} = req.body;
+    try {
+        const table = await appService.getTable(tableName);
+        res.json({ data: table });
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
+
+router.get('/get-table-names', async (req, res) => {
+ 
+    try {
+        const tableNames = await appService.getTableNames();
+        res.json({ data: tableNames });
     } catch(e) {
         res.status(500).json({error: e.message});
     }
