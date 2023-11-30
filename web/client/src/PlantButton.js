@@ -45,6 +45,69 @@ const PlantButton = () => {
             });
     };
 
+    const plotsHavingTasks = () => {
+        fetch(`${URL}/get-plots-having-tasks`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('status: ' + response.status);
+                }
+                return response.text();
+            })
+            .then((text) => {
+                setResult(text);
+            })
+            .catch((err) => {
+                setError('Failed to group');
+            });
+    };
+
+    const updatePlotTasks = async () => {
+        console.log("dog");
+
+        const oldNumValue = document.getElementById('updateOldNum').value;
+        const oldIDValue = document.getElementById('updateOldID').value;
+        const descValue = document.getElementById('updateDesc').value;
+        const deadlineValue = document.getElementById('updateDate').value;
+        const sinValue = document.getElementById('updateSin').value;
+        const statValue = document.getElementById('updateStat').value;
+        console.log("hi cat");
+        console.log(deadlineValue);
+        console.log(JSON.stringify({
+            oldNum: oldNumValue,
+            oldID: oldIDValue,
+            desc: descValue,
+            date: deadlineValue,
+            sin: sinValue,
+            stat: statValue
+        }));
+
+        try {
+            const response = await fetch(`${URL}/update-plots`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    oldNum: oldNumValue,
+                    oldID: oldIDValue,
+                    desc: descValue,
+                    date: deadlineValue,
+                    sin: sinValue,
+                    stat: statValue
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update plot tasks');
+            }
+
+            const text = await response.text();
+            setResult(text);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     return (
         <div className='plant-button'>
             <button onClick={getPlotTasks}>View Plot Task Info</button>
@@ -66,51 +129,18 @@ const PlantButton = () => {
 
             {viewedTasks && (
                 <div className='group-by'>
-                    <h1> Check how many tasks are currently registered for each plot</h1>
+                    <h3> Check how many tasks are currently registered for each plot</h3>
                     <button onClick={groupByPlot}> Search </button>
                 </div>
             )}
+            {viewedTasks && (
+                <div className='having'>
+                    <h3> See plot id's of plots having at least one task </h3>
+                    <button onClick={plotsHavingTasks}> Search </button>
+                </div>
+)}
         </div>
     );
 };
 
-// Updates plot task
-async function updatePlotTasks(event) {
-    event.preventDefault();
-    console.log("dog");
-
-    const oldNumValue = document.getElementById('updateOldNum').value;
-    const oldIDValue = document.getElementById('updateOldID').value;
-    const descValue = document.getElementById('updateDesc').value;
-    const deadlineValue = document.getElementById('updateDate').value;
-    const sinValue = document.getElementById('updateSin').value;
-    const statValue = document.getElementById('updateStat').value;
-    console.log("hi cat");
-    console.log(deadlineValue);
-    console.log(JSON.stringify({
-        oldNum: oldNumValue,
-        oldID: oldIDValue,
-        desc: descValue,
-        date: deadlineValue,
-        sin: sinValue,
-        stat: statValue
-    }));
-
-    const response = await fetch(URL + '/update-plots', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            oldNum: oldNumValue,
-            oldID: oldIDValue,
-            desc: descValue,
-            date: deadlineValue,
-            sin: sinValue,
-            stat: statValue
-        })
-    });
-
-    const responseData = await response.text();
-}
 export default PlantButton;
