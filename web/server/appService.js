@@ -79,17 +79,17 @@ async function getPlotTasksStatus() {
     });
 }
 
-async function updatePlots(oldNum, oldID, taskDesc, sinValue, statusValue) {
+async function updatePlots(oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue) {
     console.log("Updating plot tasks" + oldID + sinValue + statusValue);
     console.log("Updating plot tasks");
     return await withOracleDB(async (connection) => {
-        console.log("Values:", oldNum, oldID, taskDesc, sinValue, statusValue);
+        console.log("Values:", oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue);
 
         const result = await connection.execute(
             `UPDATE PlotTask 
-            SET TaskDescription = :taskDesc, SIN = :sinValue, status = :statusValue
+            SET TaskDescription = :taskDesc, Deadline = TO_DATE(:deadlineValue, 'YYYY-MM-DD'), SIN = :sinValue, status = :statusValue
             WHERE PlotId = :oldID AND TaskNum = :oldNum`,
-            { oldNum, oldID, taskDesc, sinValue, statusValue },
+            { oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue },
             { autoCommit: true }
         );
 

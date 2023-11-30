@@ -16,10 +16,10 @@ router.get('/check-db-connection', async (req, res) => {
 });
 
 router.post('/update-plots', async (req, res) => {
-    const {oldNum, oldID, desc, sin, stat} = req.body;
+    const {oldNum, oldID, desc, date, sin, stat} = req.body;
     console.log("Updating plot tasks router" + oldID + sin + stat);
     console.log(req.body);
-    const updateResult = await appService.updatePlots(oldNum, oldID, desc, sin, stat);
+    const updateResult = await appService.updatePlots(oldNum, oldID, desc, date, sin, stat);
     if (updateResult) {
         // res.json({ success: true });
         res.send('them plots be updated.');

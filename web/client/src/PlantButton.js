@@ -58,6 +58,7 @@ const PlantButton = () => {
                     Task Number: <input type="number" id="updateOldNum" placeholder="Enter Task Number" required /> <br /><br />
                     Plot ID: <input type="number" id="updateOldID" placeholder="Enter Plot ID" required /> <br /><br />
                     Description: <input type="text" id="updateDesc" placeholder="Enter New Description" maxLength="20" /> <br /><br />
+                    Deadline: <input type="date" id="updateDate" placeholder="Enter New Deadline" maxLength="20" /> <br /><br />
                     SIN: <input type="text" id="updateSin" placeholder="Enter New SIN" maxLength="20" /> <br /><br />
                     Status: <input type="text" id="updateStat" placeholder="Complete" maxLength="20" /> <br /><br />
 
@@ -76,39 +77,35 @@ async function updatePlotTasks(event) {
     const oldNumValue = document.getElementById('updateOldNum').value;
     const oldIDValue = document.getElementById('updateOldID').value;
     const descValue = document.getElementById('updateDesc').value;
+    const deadlineValue = document.getElementById('updateDate').value;
     const sinValue = document.getElementById('updateSin').value;
     const statValue = document.getElementById('updateStat').value;
     console.log("hi cat");
-    console.log(oldNumValue + oldIDValue + descValue + sinValue + statValue);
+    console.log(deadlineValue);
     console.log(JSON.stringify({
         oldNum: oldNumValue,
-        newID: oldIDValue,
+        oldID: oldIDValue,
         desc: descValue,
+        date: deadlineValue,
         sin: sinValue,
         stat: statValue
     }));
 
-    const response = await fetch('/update-plots', {
+    const response = await fetch(URL + '/update-plots', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             oldNum: oldNumValue,
-            newID: oldIDValue,
+            oldID: oldIDValue,
             desc: descValue,
+            date: deadlineValue,
             sin: sinValue,
             stat: statValue
         })
     });
 
-    const responseData = await response.json();
-    const messageElement = document.getElementById('updateNameResultMsg');
-
-    if (responseData.success) {
-        messageElement.textContent = "Name updated successfully!";
-    } else {
-        messageElement.textContent = "Error updating name!";
-    }
+    const responseData = await response.text();
 }
 export default PlantButton;
