@@ -1,9 +1,6 @@
-DROP TABLE DEMOTABLE;
 DROP TABLE Requires;
-DROP TABLE BuildingTable;
 DROP TABLE PlotTask;
 DROP TABLE Supply;
-DROP TABLE Tool;
 DROP TABLE Animal;
 DROP TABLE Building;
 DROP TABLE PlotOwner;
@@ -12,8 +9,6 @@ DROP TABLE Plant;
 DROP TABLE Plot;
 DROP TABLE PlantInformation;
 DROP TABLE CommunityMember;
-DROP TABLE AnimalInstructions;
-DROP TABLE ToolInfo;
 DROP TABLE SupplyInformation;
 DROP TABLE Event;
 CREATE TABLE Event (
