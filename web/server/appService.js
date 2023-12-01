@@ -7,25 +7,42 @@ const envVariables = loadEnvFile('../.env');
 const dbConfig = {
     user: envVariables.ORACLE_USER,
     password: envVariables.ORACLE_PASS,
-    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`
+    connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`,
+    poolMin: 1,
+    poolMax: 1,
+    poolIncrement: 1
 };
-console.log(dbConfig.user);
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
 
-// Wrapper to manage OracleDB actions, simplifying connection handling.
-async function shutdown() {
+
+async function initialize() {
     try {
-        await oracledb.getPool().close(10);
-        process.exit(0);
+        await oracledb.createPool(dbConfig);
+        console.log("Connection pool created");
     } catch (err) {
+        console.error("Error creating connection pool", err);
         process.exit(1);
     }
 }
+
+async function shutdown() {
+    try {
+        await oracledb.getPool().close(10); // Close the pool
+        console.log("Connection pool closed");
+        process.exit(0);
+    } catch (err) {
+        console.error("Error during shutdown", err);
+        process.exit(1);
+    }
+}
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+initialize();
 async function withOracleDB(action) {
     let connection;
     try {
-        connection = await oracledb.getConnection(dbConfig);
+        connection = await oracledb.getConnection();
         return await action(connection);
     } catch (err) {
         console.error(err);
@@ -42,6 +59,7 @@ async function withOracleDB(action) {
 }
 
 async function test(query) {
+    console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
         return result;
@@ -56,18 +74,15 @@ async function getTableNames() {
         `
         );
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 
 async function getTable(tableName) {
     const query = `SELECT * FROM ${tableName}`
+    console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -78,8 +93,6 @@ async function getTableHeaders(tableName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -92,8 +105,6 @@ async function projection(tableName, columns) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 //Select and project columns[]
@@ -105,8 +116,6 @@ async function selection(tableName, conditions) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -118,8 +127,6 @@ async function getTableNames() {
         `
         );
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -127,10 +134,9 @@ async function getTableNames() {
 // Core functions for database operations
 // Modify these functions, especially the SQL queries, based on your project's requirements and design.
 async function testOracleConnection() {
+    console.log("Checking DB connection!");
     return await withOracleDB(async (connection) => {
         return true;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -154,8 +160,6 @@ async function getPlots() {
         
         );
         return result;
-    }).catch(() => {
-        return false;
     });
 
 }
@@ -168,8 +172,6 @@ async function getPlotTasksStatus() {
         `
         );
         return result;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -182,8 +184,6 @@ async function updatePlots(oldStatus, newStatus) {
         );
 
         return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
     });
 }
 
@@ -217,73 +217,6 @@ async function resetTables() {
         return false;
     }
 }
-
-/*async function fetchDemotableFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-
-async function initiateDemotable() {
-    return await withOracleDB(async (connection) => {
-        try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
-        }
-
-        const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE ( 
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
-        `);
-        return true;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function insertDemotable(id, name) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
-            [id, name],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function updateNameDemotable(oldName, newName) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [newName, oldName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function countDemotable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}*/
 
 module.exports = {
     testOracleConnection,

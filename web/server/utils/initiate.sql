@@ -198,14 +198,14 @@ VALUES (
         60
     );
 INSERT INTO Plot
-values (1, 20, 10, 10, 10, 'Tomato', '823709808', 8000);
+values (1, 10, 5, 15, 25, 'Tomato', '823709808', 8000);
 INSERT INTO Plot
-values (2, 20, 10, 10, 40, 'Basil', '895565895', 8000);
+values (2, 10, 5, 15, 35, 'Basil', '895565895', 8000);
 INSERT INTO Plot
 values (
         3,
+        5,
         10,
-        20,
         40,
         20,
         'Strawberry',
@@ -213,11 +213,11 @@ values (
         10000
     );
 INSERT INTO Plot
-values (4, 10, 20, 60, 20, 'Squash', '887515887', 5000);
+values (4, 5, 10, 60, 20, 'Squash', '887515887', 5000);
 INSERT INTO Plot
-values (5, 10, 20, 50, 20, 'Chives', '888789888', 12000);
+values (5, 5, 10, 50, 20, 'Chives', '888789888', 12000);
 INSERT INTO Plot
-values (6, 10, 20, 70, 20, NULL, NULL, 16000);
+values (6, 5, 10, 70, 20, NULL, NULL, 16000);
 INSERT INTO PlotOwner
 values ('888789888', '2368634471', 5);
 INSERT INTO PlotOwner
@@ -296,19 +296,19 @@ values (
         'Barn',
         100,
         '3759',
-        10,
         25,
-        30,
-        0
+        15,
+        35,
+        75
     );
 INSERT INTO Building
 values (
         'East Shed',
         50,
         '2744',
-        30,
+        15,
         25,
-        0,
+        10,
         50
     );
 INSERT INTO Building
@@ -316,9 +316,9 @@ values (
         'West Shed',
         50,
         '3644',
-        30,
+        10,
         25,
-        75,
+        85,
         50
     );
 INSERT INTO Animal

@@ -25,10 +25,10 @@ const FarmMap = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({tableName:'Buildings'})
+                body: JSON.stringify({tableName:'Building'})
             })
               .then((res) => res.json())
-              .then((buildings) => setPlots(buildings));
+              .then((buildings) => setBuildings(buildings));
           }, []);
           const plotRows = plots?.data?.rows;
           const buildingRows = buildings?.data?.rows;
@@ -61,10 +61,10 @@ const FarmMap = () => {
                                 key={building[0]}
                                 className="building"
                                 style={{
-                                    left: `${building[3]*scale}px`,
-                                    top: `${building[4]*scale}px`,
-                                    width: `${building[1]*scale}px`,
-                                    height: `${building[2]*scale}px`
+                                    left: `${building[5]*scale}px`,
+                                    top: `${building[6]*scale}px`,
+                                    width: `${building[3]*scale}px`,
+                                    height: `${building[4]*scale}px`
                                 }}
                                 onClick={() => handleBuildingClick(building[0])}
                             >
