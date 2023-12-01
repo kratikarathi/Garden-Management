@@ -298,8 +298,9 @@ async function resetTables() {
 async function insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `INSERT INTO PlotTask VALUES (:TaskNum, :PlotID, :TaskDescription, :Deadline, :SIN, :Status)`,
+            `INSERT INTO PlotTask VALUES (:TaskNum, :PlotID, :TaskDescription, TO_DATE(:Deadline,'YYYY-MM-DD'), :SIN, :Status)`,
             { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status },
+            { autoCommit: true}
         );
 
         return result.rowsAffected && result.rowsAffected > 0;
