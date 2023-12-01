@@ -165,8 +165,7 @@ router.get('/reset-tables', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-=======
+
 router.get('/insert-member', async (req, res) => {
     const result = await appService.resetTables();
    
@@ -192,9 +191,9 @@ router.post("/initiate-tables", async (req, res) => {
 });
 
 router.post("/insert-plottable", async (req, res) => {
-    const { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status } = req.body;
+    const { Num, ID, desc, date, sin, stat } = req.body;
     console.log(req.body);
-    const insertResult = await appService.insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status);
+    const insertResult = await appService.insertPlotTask(Num, ID, desc, date, sin, stat);
     if (insertResult) {
         res.send({ success: true });
     } else {
@@ -227,7 +226,5 @@ router.get('/count-demotable', async (req, res) => {
         });
     }
 });
-
->>>>>>> 7e2cf4820b05d68e05a472d4c1b8b00328860f79
 
 module.exports = router;
