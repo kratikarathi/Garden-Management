@@ -13,12 +13,9 @@ import ResetButton from "./ResetButton";
 import PlantButton from "./PlantButton";
 import Selection from "./Selection";
 import FarmMap from "./FarmMap";
-<<<<<<< HEAD
 import Projection from "./Projection";
-=======
 import InsertButton from "./InsertButton";
 
->>>>>>> 7e2cf4820b05d68e05a472d4c1b8b00328860f79
 
 //port that our backend uses
 const PORT = process.env.REACT_APP_API_PORT;
@@ -36,28 +33,38 @@ Button.propTypes = {
 
 function App() {
   const [data, setData] = React.useState(null);
+  const [screen, setScreen] = React.useState('FarmMap');
   React.useEffect(() => {
     fetch(URL + "/check-db-connection")
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
 
+  const screens = ['FarmMap','PlantButton','InsertButton','Selection','Projection']
+  const handleButtonClick = (screen) => {
+    setScreen(screen);
+  };
 
   return (
     <div className="App">
       <header className = "App-toolbar">
       <ResetButton />
+      {screens.map(screen => {
+        return <button onClick={() => handleButtonClick(screen)}>{screen}</button>
+      })}
       </header>
 
       <header className="App-header">
         <h1> Community Garden </h1>
-          <ResetButton />
-          <PlantButton />
-          <InsertButton />
+         
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
       <body className="App-body">
-                <FarmMap />
+          {screen == 'FarmMap' ? <FarmMap /> : ""}
+          {screen == 'PlantButton' ? <PlantButton /> : ""}
+          {screen == 'InsertButton' ? <InsertButton /> : ""}
+          {screen == 'Projection' ? <Projection /> : ""}
+          {screen == 'Selection' ? <Selection /> : ""}
       </body>
       
 

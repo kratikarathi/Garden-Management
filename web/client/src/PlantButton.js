@@ -126,13 +126,8 @@ const PlantButton = () => {
 
     return (
         <div className='plant-button'>
-<<<<<<< HEAD
-            <button onClick={GetPlotTasks}>View Plot Task Info</button>
-            {result && <Table tableData={result}/>}
-=======
             <button onClick={getPlotTasks}>View Plot Task Info</button>
-            {result && <div className='result' style={{ color: 'green' }}>{result}</div>}
->>>>>>> 7e2cf4820b05d68e05a472d4c1b8b00328860f79
+            {result && <Table tableData={result}/>}
             {error && <div className='result' style={{ color: 'red' }}>Error: {error}</div>}
 
             <div className='building'>
