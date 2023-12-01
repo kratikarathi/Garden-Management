@@ -114,7 +114,9 @@ async function getTableHeaders(tableName) {
 
 //Select and project columns[]
 async function projection(tableName, columns) {
-    console.log(columns);
+    if(columns.length == 0) {
+        throw  new Error('Columns cannot be empty!');
+    }
     const query = `SELECT ${columns.map(column => {return (column)})} FROM ${tableName}`
     console.log(query);
     return await withOracleDB(async (connection) => {

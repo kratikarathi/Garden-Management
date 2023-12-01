@@ -12,6 +12,7 @@ const Selection = () => {
     //column: operation: value:
 
     function changeCondition(index, field, value) {
+        setError(null);
         const newConditions = conditions.map((condition, i) => {
             if (i == index) {
                 return { ...condition, [field]: value };
@@ -21,12 +22,14 @@ const Selection = () => {
         setConditions(newConditions);
     }
     function addCondition() {
+        setError(null);
         if(!selected) {
             return;
         }
         setConditions([...conditions, {conjugate:"AND", column: "", operation: "", value: "" }])
     }
     function removeCondition(index) {
+        setError(null);
         var newConditions = [];
         conditions.map((condition, i) => {
             if (i != index) {
@@ -59,6 +62,7 @@ const Selection = () => {
        
     }
     async function handleDropDownChange(event) {
+        setError(null);
         setTable(null);
         setSelected(event.target.value);
         setConditions([{conjugate:"", column: "", operation: "", value: "" }]);

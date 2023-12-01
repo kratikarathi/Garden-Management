@@ -9,9 +9,11 @@ const Projection = () => {
     const [tableNames, setTableNames] = useState(null);
     const [checkBoxes,setCheckBoxes] = useState(null);
     const [table, setTable] = useState(null);
+    const [error, setError] = useState(null);
     var checkboxes = [];
     async function handleDropDownChange(event) {
         setTable(null);
+        setError(null);
         setSelected(event.target.value);
         //we want to create some checkboxes now
         //First lets get the column headers of the table we want to project on
@@ -30,6 +32,7 @@ const Projection = () => {
         setCheckBoxes(checkboxes);
     }
     const handleCheckBoxChange = (index) => {
+        setError(null);
         setTable(null);
         setCheckBoxes(null);
         var updatedCheckBoxes = checkBoxes.map((checkbox,i) =>{
@@ -54,6 +57,11 @@ const Projection = () => {
 
     async function viewTables(){
         setTable(null);
+        setError(null);
+        if(selected == "") {
+            setError("Select a table first!");
+            return;
+        }
         var headers = []
         checkBoxes.map((checkbox) =>{
             if(checkbox.checked) {
@@ -68,9 +76,14 @@ const Projection = () => {
             },
             body:JSON.stringify({tableName:selected, headers:headers })
         });
-        const data = await response.json();
-        console.log(data);
-        setTable(data);
+        if(response.ok) {
+            setError(null);
+            const data = await response.json();
+            setTable(data);
+        }else{
+            var error = await response.json();
+            setError(error.error)
+        }
     };
 
 
@@ -100,7 +113,9 @@ const Projection = () => {
                     </label>);
                     }): ""}
             </div>
+            
             <button onClick={viewTables}>View Table</button>
+            {error && <div className = 'result' style={{ color: 'red' }}>Error: {error}</div>}
             {table?<Table tableData = {table}/>: <></>}
         </div>
     );

@@ -117,7 +117,6 @@ router.post('/get-headers',async (req, res) => {
 //provide tableName:and headers: and returns the table data projected onto those
 router.post('/projection',async (req, res) => {
     const {tableName,headers} = req.body;
-    console.log(tableName,headers);
     try {
         const projectedTable = await appService.projection(tableName,headers);
         res.json({ data: projectedTable });
