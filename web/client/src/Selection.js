@@ -118,7 +118,8 @@ const Selection = () => {
                 }
             </div>
             <button onClick={filter}>Filter</button>
-            <button onClick={addCondition}>Add Condition</button>
+            <button onClick={addCondition}>Add AND</button>
+            <button onClick={addCondition}>Add OR</button>
             {table ? <Table tableData={table} /> : <></>}
         </div>
     );

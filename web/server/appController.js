@@ -20,6 +20,16 @@ router.get('/check-db-connection', async (req, res) => {
    
 });
 
+router.post('/get-plot-info',async(req,res) => {
+    const {plotID} = req.body;
+    try {
+        const result = await appService.getPlotInfo(plotID);
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
+
 router.post('/update-plots', async (req, res) => {
     const { oldStatus, newStatus } = req.body;
     const updateResult = await appService.updatePlots(oldStatus, newStatus);

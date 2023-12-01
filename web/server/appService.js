@@ -77,6 +77,21 @@ async function getTableNames() {
     });
 }
 
+
+async function getPlotInfo(plotID) {
+    const query = `
+    SELECT DISTINCT c.PersonName
+    FROM PlotTask pt, Gardener g, CommunityMember c
+    WHERE pt.PlotID = ${plotID} AND pt.SIN = g.SIN AND c.SIN = g.SIN
+    `
+    console.log(query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query
+        );
+        return {plotTasks:result};
+    });
+}
+
 async function getTable(tableName) {
     const query = `SELECT * FROM ${tableName}`
     console.log(query);
@@ -230,7 +245,8 @@ module.exports = {
     getTable,
     getTableHeaders,
     selection,
-    test
+    test,
+    getPlotInfo
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable

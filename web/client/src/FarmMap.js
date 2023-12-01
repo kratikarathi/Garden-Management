@@ -1,5 +1,6 @@
 import './FarmMap.css';
 import React, { useState } from 'react';
+import PlotInterface from './PlotInterface';
 const PORT = process.env.REACT_APP_API_PORT;
 const URL = "http://localhost:" + PORT + "/api"; //URL of our backend
 
@@ -7,12 +8,16 @@ const FarmMap = () => {
 
     const [plots, setPlots] = useState(null);
     const [buildings, setBuildings] = useState(null);
-
+    const [view, setView] = useState(null);
     async function handlePlotClick(plotID) {
-        console.log(plotID);
+        var view = ({type: 'plot', ID: plotID});
+        setView(view);
+        console.log(view);
     }
     async function handleBuildingClick(buildingID) {
-        console.log(buildingID);
+        var view = ({type: 'building', ID: buildingID});
+        setView(view);
+        console.log(view);
     }
         React.useEffect(() => {
             fetch(URL + "/get-plots/")
@@ -34,6 +39,8 @@ const FarmMap = () => {
           const buildingRows = buildings?.data?.rows;
           var scale = 5.0;
           return (
+            <div className = "body">
+           
             <div className="farm-map">
                 {plotRows ? ( plotRows.map(plot => {
                         return (
@@ -74,7 +81,10 @@ const FarmMap = () => {
                         );
                     })
                 ) : "Loading"}
-
+           
+            </div>  
+            {view?.type == 'plot' ? <PlotInterface plotID = {view.ID}/> : ""}
+            {view?.type == 'plot' ? "": ""}
             </div>
         );
     };

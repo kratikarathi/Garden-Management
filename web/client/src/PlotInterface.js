@@ -1,39 +1,28 @@
-import './FarmMap.css';
+import './PlotInterface.css';
+import Table from "./Table";
 import React, { useState } from 'react';
 const PORT = process.env.REACT_APP_API_PORT;
 const URL = "http://localhost:" + PORT + "/api"; //URL of our backend
 
 const PlotInterface = ({plotID}) => {
-
-    const [plots, setPlots] = useState(null);
-    const [buildings, setBuildings] = useState(null);
-
-    async function handlePlotClick(plotID) {
-        console.log(plotID);
-    }
-    async function handleBuildingClick(buildingID) {
-        console.log(buildingID);
-    }
+    //First lets do all our queries.
+        const [gardeners, setGardeners] = useState(null);
         React.useEffect(() => {
-            fetch(URL + "/get-plots/")
-              .then((res) => res.json())
-              .then((plots) => setPlots(plots));
-          }, []);
-          React.useEffect(() => {
-            fetch(URL + "/get-table",{
-                method: 'POST', // or 'PUT', depending on the API requirement
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({tableName:'Building'})
-            })
-              .then((res) => res.json())
-              .then((buildings) => setBuildings(buildings));
-          }, []);
-          const plotRows = plots?.data?.rows;
-          const buildingRows = buildings?.data?.rows;
-          var scale = 5.0;
-
+        fetch(URL + "/get-plot-info",{
+            method: 'POST', // or 'PUT', depending on the API requirement
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'plotID':plotID})
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.data?.plotTasks) {
+                setGardeners(data.data.plotTasks);
+            }
+        });
+    }, [plotID]);
+      
           //Things we want:
           /*
             List of tasks associated with plot
@@ -41,12 +30,20 @@ const PlotInterface = ({plotID}) => {
             Insert plot task?
             Delete plot task?
             Update plot task?
-            Gardeners who have worked on this plot?
-            
+            Gardeners who have worked on this plot? join
+
           */
           return (
             <div className="plot-interface">
-                
+
+                    <h1>
+                        Plot {plotID}:
+                    </h1>
+                    
+                    Gardeners who have worked on this plot
+                        
+                    
+                    <Table tableData={{data:gardeners}}></Table>
             </div>
         );
     };

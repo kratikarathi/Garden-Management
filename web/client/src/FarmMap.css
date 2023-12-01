@@ -16,6 +16,9 @@
     cursor: pointer;
     align-content: center;
 }
+.body {
+    display: flex;
+}
 .building {
     position: absolute;
     border: 2px solid black;
