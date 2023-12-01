@@ -159,12 +159,11 @@ async function testOracleConnection() {
 const fs = require('fs').promises
 
 async function insertCommunityMember(Sin, Name, Email) {
-    const result = await connection.execute(`
-    INSERT INTO CommunityMember
-    VALUES (` + Sin + `,` + Name + `,` + Email + `)`
-);
+    const result = await connection.execute(
+        `INSERT INTO CommunityMember VALUES (:Sin, :Name, :Email)`,
+        { Sin, Name, Email }
+    );
 }
-
 
 async function getPlots() {
     console.log("Getting plots");
@@ -183,18 +182,74 @@ async function getPlotTasksStatus() {
     console.log("Getting plot tasks");
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-        SELECT TaskNum, Status From PlotTask
+        SELECT * From PlotTask
         `
         );
         return result;
     });
 }
-
-async function updatePlots(oldStatus, newStatus) {
+// GROUP BY
+async function getTasksByPlot() {
+    console.log("Getting tasks by plot id");
     return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT PlotID, COUNT(TaskNum) From PlotTask GROUP BY PlotID
+        `
+        );
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+// HAVING
+async function getPlotsHavingTasks() {
+    console.log("Getting plots that have tasks");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT TaskNum
+        FROM PlotTask
+        GROUP BY TaskNum
+        HAVING COUNT(*) > 0
+        `
+        );
+        return result;
+    }).catch((e) => {
+        throw new Error('Failed: ' + e);
+    });
+}
+// Find those buildings for which their average supply count is the
+// minimum over all buildings
+// nested GROUP BY
+async function getBuildingsSupplyCount() {
+    console.log("Getting tasks by plot id and ");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+        SELECT BuildingName, avg(SupplyCount)
+        FROM Supply
+        GROUP BY BuildingName
+        HAVING avg(SupplyCount) <= all (SELECT AVG(SupplyCount)
+                                FROM Supply
+                                GROUP BY BuildingName)
+        `
+        );
+        return result;
+    }).catch((e) => {
+        throw new Error('Failed: ' + e);
+    });
+}
+
+// UPDATE
+async function updatePlots(oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue) {
+    console.log("Updating plot tasks" + oldID + sinValue + statusValue);
+    console.log("Updating plot tasks");
+    return await withOracleDB(async (connection) => {
+        console.log("Values:", oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue);
+
         const result = await connection.execute(
-            `UPDATE PlotTask SET status=:newStatus where status=:oldStatus`,
-            [newStatus, oldStatus],
+            `UPDATE PlotTask 
+            SET TaskDescription = :taskDesc, Deadline = TO_DATE(:deadlineValue, 'YYYY-MM-DD'), SIN = :sinValue, status = :statusValue
+            WHERE PlotId = :oldID AND TaskNum = :oldNum`,
+            { oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue },
             { autoCommit: true }
         );
 
@@ -233,10 +288,25 @@ async function resetTables() {
     }
 }
 
+async function insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO PlotTask VALUES (:TaskNum, :PlotID, :TaskDescription, :Deadline, :SIN, :Status)`,
+            {TaskNum, PlotID, TaskDescription, Deadline, SIN, Status},
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 module.exports = {
     testOracleConnection,
     //fetchDemotableFromDb,
     resetTables,
+    insertPlotTask,
     getPlots,
     updatePlots,
     getPlotTasksStatus,
@@ -246,7 +316,10 @@ module.exports = {
     getTableHeaders,
     selection,
     test,
-    getPlotInfo
+    getPlotInfo,
+    getTasksByPlot,
+    getPlotsHavingTasks,
+    getBuildingsSupplyCount,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable
