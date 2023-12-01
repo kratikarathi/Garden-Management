@@ -77,18 +77,25 @@ async function getTableNames() {
     });
 }
 
-
+//JOIN (query 1 joins)
 async function getPlotInfo(plotID) {
-    const query = `
-    SELECT DISTINCT c.PersonName
+    const query1 = `
+    SELECT DISTINCT  pt.PlotID, c.PersonName as "Gardener Name",g.SIN as "Gardener SIN", pt.TaskDescription as "Description", pt.Deadline as "Deadline", pt.Status as "Status"
     FROM PlotTask pt, Gardener g, CommunityMember c
     WHERE pt.PlotID = ${plotID} AND pt.SIN = g.SIN AND c.SIN = g.SIN
-    `
-    console.log(query);
+    ORDER BY pt.Deadline
+    `;
+    const query2 = `
+    SELECT *
+    FROM Plot p
+    WHERE p.PlotID = ${plotID}
+    `;
+    console.log(query1);
+    console.log(query2);
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(query
-        );
-        return {plotTasks:result};
+        const result1 = await connection.execute(query1);
+        const result2 = await connection.execute(query2);
+        return { plotTasks: result1, plotInfo: result2};
     });
 }
 
@@ -104,7 +111,7 @@ async function getTable(tableName) {
 async function getTableHeaders(tableName) {
     const query = `SELECT COLUMN_NAME FROM ALL_TAB_COLUMNS
                 WHERE TABLE_NAME = '${tableName}'`
-                console.log(query);
+    console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
         return result;
@@ -114,10 +121,10 @@ async function getTableHeaders(tableName) {
 
 //Select and project columns[]
 async function projection(tableName, columns) {
-    if(columns.length == 0) {
-        throw  new Error('Columns cannot be empty!');
+    if (columns.length == 0) {
+        throw new Error('Columns cannot be empty!');
     }
-    const query = `SELECT ${columns.map(column => {return (column)})} FROM ${tableName}`
+    const query = `SELECT ${columns.map(column => { return (column) })} FROM ${tableName}`
     console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
@@ -128,7 +135,7 @@ async function projection(tableName, columns) {
 async function selection(tableName, conditions) {
     console.log(conditions);
     const query = `SELECT * FROM ${tableName}
-    WHERE ${conditions.map((condition) => {return condition.conjugate + ' ' +  condition.column + condition.operation + condition.value}).join('')}`
+    WHERE ${conditions.map((condition) => { return condition.conjugate + ' ' + condition.column + condition.operation + condition.value }).join('')}`
     console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
@@ -292,7 +299,7 @@ async function insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, S
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `INSERT INTO PlotTask VALUES (:TaskNum, :PlotID, :TaskDescription, :Deadline, :SIN, :Status)`,
-            {TaskNum, PlotID, TaskDescription, Deadline, SIN, Status},
+            { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status },
         );
 
         return result.rowsAffected && result.rowsAffected > 0;

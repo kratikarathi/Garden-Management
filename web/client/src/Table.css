@@ -1,0 +1,23 @@
+table th {
+    border: 1px solid #ffffff;
+    padding: 8px;
+}
+
+table td {
+    border: 1px solid #ffffff;
+    padding: 8px;
+}
+
+table tr {
+    border: 1px solid #ffffff;
+    padding: 8px;
+}
+
+table thead {
+    border-bottom: 2px solid #ccc;
+}
+
+table {
+    background-color: rgb(29, 29, 29);
+    border-collapse: collapse;
+}

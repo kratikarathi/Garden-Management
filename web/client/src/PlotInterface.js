@@ -37,13 +37,14 @@ const PlotInterface = ({plotID}) => {
             <div className="plot-interface">
 
                     <h1>
-                        Plot {plotID}:
+                        Plot {plotID}
                     </h1>
                     
-                    Gardeners who have worked on this plot
+                    <h1>
                         
+                    </h1>
                     
-                    <Table tableData={{data:gardeners}}></Table>
+                    <Table tableData={{data:gardeners}} tableName="Plot Tasks"></Table>
             </div>
         );
     };

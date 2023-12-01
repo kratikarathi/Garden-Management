@@ -7,24 +7,6 @@ const InsertButton = () => {
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
     const [viewedTasks, setViewedTasks] = useState(false);
-   /*const insertTable = () => {
-        setResult("Inserting into tables...");
-        setError(null);
-        fetch(URL+ '/insert-plottable')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('status: ' + response.status);
-                }
-                return response.text();
-            })
-            .then(text => {
-                setResult(text);
-            })
-            .catch(err => {
-                setError('Failed to insert into table');
-            })
-            .finally(() => setViewedTasks(true));
-    };*/
 
     async function insertPlotTasks(event) {
         event.preventDefault();
