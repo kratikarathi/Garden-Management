@@ -11,6 +11,7 @@ import {
 import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
 import PlantButton from "./PlantButton";
+import Selection from "./Selection";
 import FarmMap from "./FarmMap";
 import Projection from "./Projection";
 
@@ -47,33 +48,10 @@ function App() {
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
       <body className="App-body">
-        <Projection />
+                <FarmMap />
       </body>
       
 
-    </div>
-  );
-}
-
-function toDash() {
-  return (
-    <Router>
-      <Route
-        path="/dashboard"
-        element={<Dashboard />}
-      />
-    </Router>
-  );
-}
-
-function Toolbar({ onLogin }) {
-  return (
-    <div>
-      <h3> Enter email </h3>
-      <input name="myInput" />
-      <Button onClick={onLogin}>
-        LOGIN
-      </Button>
     </div>
   );
 }

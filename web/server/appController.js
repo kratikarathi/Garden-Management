@@ -68,6 +68,18 @@ router.post('/projection',async (req, res) => {
 
 });
 
+router.post('/selection',async (req, res) => {
+    const {tableName,conditions} = req.body;
+    console.log(tableName,conditions);
+    const selectedTable = await appService.selection(tableName,conditions);
+    try {
+        res.json({ data: selectedTable });
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+
+});
+
 router.post('/get-table', async (req, res) => {
     const {tableName} = req.body;
     try {
@@ -88,6 +100,16 @@ router.get('/get-table-names', async (req, res) => {
     }
 });
 
+
+router.get('/test', async (req, res) => {
+    const {query} = req.body;
+    try {
+        const data = await appService.test(query);
+        res.json({ data: data });
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
 router.get('/reset-tables', async (req, res) => {
     const result = await appService.resetTables();
    

@@ -12,9 +12,12 @@ function Table({tableData}) {
         <table>
             <thead>
                 <tr>
-                    {metaData.map(columnName => {
+                    {metaData.map((columnName,i) => {
+                        if(columnName.name == "") {
+                            return;
+                        }
                         return(
-                            <th>
+                            <th key= {i}>
                                 {columnName.name}
                             </th>
                         );

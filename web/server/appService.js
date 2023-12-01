@@ -9,8 +9,19 @@ const dbConfig = {
     password: envVariables.ORACLE_PASS,
     connectString: `${envVariables.ORACLE_HOST}:${envVariables.ORACLE_PORT}/${envVariables.ORACLE_DBNAME}`
 };
+console.log(dbConfig.user);
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
 
 // Wrapper to manage OracleDB actions, simplifying connection handling.
+async function shutdown() {
+    try {
+        await oracledb.getPool().close(10);
+        process.exit(0);
+    } catch (err) {
+        process.exit(1);
+    }
+}
 async function withOracleDB(action) {
     let connection;
     try {
@@ -30,6 +41,12 @@ async function withOracleDB(action) {
     }
 }
 
+async function test(query) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return result;
+    })
+}
 
 async function getTableNames() {
     console.log("Getting list of all Tables");
@@ -71,6 +88,19 @@ async function getTableHeaders(tableName) {
 async function projection(tableName, columns) {
     console.log(columns);
     const query = `SELECT ${columns.map(column => {return (column)})} FROM ${tableName}`
+    console.log(query);
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query);
+        return result;
+    }).catch(() => {
+        return false;
+    });
+}
+//Select and project columns[]
+async function selection(tableName, conditions) {
+    console.log(conditions);
+    const query = `SELECT * FROM ${tableName}
+    where ${conditions.map((condition) => {return condition.column + condition.operation + condition.value}).join(' AND ')}`
     console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
@@ -265,7 +295,9 @@ module.exports = {
     getTableNames,
     projection,
     getTable,
-    getTableHeaders
+    getTableHeaders,
+    selection,
+    test
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable

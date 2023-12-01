@@ -1,5 +1,6 @@
 DROP TABLE DEMOTABLE;
 DROP TABLE Requires;
+DROP TABLE BuildingTable;
 DROP TABLE PlotTask;
 DROP TABLE Supply;
 DROP TABLE Tool;
