@@ -126,7 +126,7 @@ async function projection(tableName, columns) {
 async function selection(tableName, conditions) {
     console.log(conditions);
     const query = `SELECT * FROM ${tableName}
-    where ${conditions.map((condition) => {return condition.column + condition.operation + condition.value}).join(' AND ')}`
+    WHERE ${conditions.map((condition) => {return condition.conjugate + ' ' +  condition.column + condition.operation + condition.value}).join('')}`
     console.log(query);
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(query);
@@ -171,11 +171,9 @@ async function getPlots() {
         const result = await connection.execute(`
         SELECT * From Plot
         `
-        
         );
         return result;
     });
-
 }
 
 async function getPlotTasksStatus() {

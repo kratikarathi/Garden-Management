@@ -7,7 +7,8 @@ const Selection = () => {
     const [table, setTable] = useState(null);
     const [tableNames, setTableNames] = useState(null);
     const [selected, setSelected] = useState(null);
-    const [conditions, setConditions] = useState([{ column: "", operation: "", value: "" }]);
+    const [conditions, setConditions] = useState([{conjugate:"", column: "", operation: "", value: "" }]);
+    const [error, setError] = useState(null);
     //column: operation: value:
 
     function changeCondition(index, field, value) {
@@ -20,14 +21,21 @@ const Selection = () => {
         setConditions(newConditions);
     }
     function addCondition() {
-        setConditions([...conditions, { column: "", operation: "", value: "" }])
+        if(!selected) {
+            return;
+        }
+        setConditions([...conditions, {conjugate:"AND", column: "", operation: "", value: "" }])
     }
     function removeCondition(index) {
         var newConditions = [];
         conditions.map((condition, i) => {
             if (i != index) {
+                if(index===0 && i ===1){
+                    condition.conjugate = ""
+                }
                 newConditions.push(condition);
             }
+           
         });
         setConditions(newConditions);
     }
@@ -40,12 +48,20 @@ const Selection = () => {
             },
             body: JSON.stringify({ tableName: selected,  conditions: conditions})
         });
-        const table = await response.json();
-        setTable(table);
+        if(response.ok) {
+            setError(null);
+            const table = await response.json();
+            setTable(table);
+        }else{
+            var error = await response.json();
+            setError(error.error)
+        }
+       
     }
     async function handleDropDownChange(event) {
         setTable(null);
         setSelected(event.target.value);
+        setConditions([{conjugate:"", column: "", operation: "", value: "" }]);
         var response = await fetch(URL + "/get-table", {
             method: "POST",
             headers: {
@@ -84,6 +100,13 @@ const Selection = () => {
             <div className="conditions">
                 { table?.data?.metaData? conditions.map((condition, index) =>
                         <div>
+                                {index !== 0 ?  <select
+                                value={condition.conjugate}
+                                onChange={(e) => changeCondition(index, 'conjugate', e.target.value)}
+                                >
+                                <option value="AND">AND</option>
+                                <option value="OR">OR</option>
+                            </select> : ""} 
                              <select
                                 value={condition.column}
                                 onChange={(e) => changeCondition(index, 'column', e.target.value)}
@@ -94,6 +117,7 @@ const Selection = () => {
                                 )
                                 }
                             </select>
+                           
                             <select
                                 value={condition.operation}
                                 onChange={(e) => changeCondition(index, 'operation', e.target.value)}
@@ -118,8 +142,8 @@ const Selection = () => {
                 }
             </div>
             <button onClick={filter}>Filter</button>
-            <button onClick={addCondition}>Add AND</button>
-            <button onClick={addCondition}>Add OR</button>
+            <button onClick={addCondition}>Add Conditon</button>
+            {error && <div className = 'result' style={{ color: 'red' }}>Error: {error}</div>}
             {table ? <Table tableData={table} /> : <></>}
         </div>
     );

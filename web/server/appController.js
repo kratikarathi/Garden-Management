@@ -30,6 +30,19 @@ router.post('/get-plot-info',async(req,res) => {
     }
 });
 
+
+router.post('/insert-plot-task',async(req,res) => {
+    const {plotID, SIN,} = req.body;
+    try {
+        const result = await appService.getPlotInfo(plotID);
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
+
+
+
 router.post('/update-plots', async (req, res) => {
     const {oldNum, oldID, desc, date, sin, stat} = req.body;
     console.log("Updating plot tasks router" + oldID + sin + stat);
@@ -52,6 +65,7 @@ router.get('/get-plot-tasks', async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
+
 
 router.get('/get-tasks-by-plot', async (req, res) => {
     // const {plotID} = req.params;
@@ -80,7 +94,6 @@ router.get('/get-buildings-supply-count', async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
-
 router.get('/get-plots', async (req, res) => {
     try {
          const result = await appService.getPlots();
@@ -105,8 +118,8 @@ router.post('/get-headers',async (req, res) => {
 router.post('/projection',async (req, res) => {
     const {tableName,headers} = req.body;
     console.log(tableName,headers);
-    const projectedTable = await appService.projection(tableName,headers);
     try {
+        const projectedTable = await appService.projection(tableName,headers);
         res.json({ data: projectedTable });
     } catch(e) {
         res.status(500).json({error: e.message});
@@ -117,8 +130,8 @@ router.post('/projection',async (req, res) => {
 router.post('/selection',async (req, res) => {
     const {tableName,conditions} = req.body;
     console.log(tableName,conditions);
-    const selectedTable = await appService.selection(tableName,conditions);
     try {
+        const selectedTable = await appService.selection(tableName,conditions);
         res.json({ data: selectedTable });
     } catch(e) {
         res.status(500).json({error: e.message});
@@ -165,69 +178,5 @@ router.get('/reset-tables', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-=======
-router.get('/insert-member', async (req, res) => {
-    const result = await appService.resetTables();
-   
-    if(result) {
-        res.send('Tables successfully reset.');
-    }else {
-        res.status(500).send('Failed to reset tables.');
-    }
-});
-
-router.get('/demotable', async (req, res) => {
-    const tableContent = await appService.fetchDemotableFromDb();
-    res.json({data: tableContent});
-});
-
-router.post("/initiate-tables", async (req, res) => {
-    const initiateResult = await appService.initiateTables();
-    if (initiateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
-router.post("/insert-plottable", async (req, res) => {
-    const { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status } = req.body;
-    console.log(req.body);
-    const insertResult = await appService.insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status);
-    if (insertResult) {
-        res.send({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
-
-router.post("/update-name-demotable", async (req, res) => {
-    const { oldName, newName } = req.body;
-    const updateResult = await appService.updateNameDemotable(oldName, newName);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
-router.get('/count-demotable', async (req, res) => {
-    const tableCount = await appService.countDemotable();
-    if (tableCount >= 0) {
-        res.json({ 
-            success: true,  
-            count: tableCount
-        });
-    } else {
-        res.status(500).json({ 
-            success: false, 
-            count: tableCount
-        });
-    }
-});
-
->>>>>>> 7e2cf4820b05d68e05a472d4c1b8b00328860f79
 
 module.exports = router;
