@@ -79,6 +79,24 @@ const AggregatedReports = () => {
                 setError('Failed to group');
             });
     };
+
+    const division = () => {
+        setError(null);
+        fetch(`${URL}/division`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('status: ' + response.status);
+                }
+                return response.json();
+            })
+            .then((text) => {
+                setResult(text);
+            })
+            .catch((err) => {
+                setError('Failed to group');
+            });
+    };
+
     return (
         <div className='plant-button'>
             <button onClick={getPlotTasks}>View Plot Task Info</button>
@@ -98,8 +116,13 @@ const AggregatedReports = () => {
                 </div>
 )}
             <div className='buildingMin'>
-                <h3> Search Building name with the minimum average supply count </h3>
+                <h3> See building name with the minimum average supply count </h3>
                 <button onClick={buildingSupplyCount}> Search </button>
+            </div>
+
+            <div className='division'>
+                <h3> See supplies that are in all buildings</h3>
+                <button onClick={division}> Search </button>
             </div>
 
         </div>

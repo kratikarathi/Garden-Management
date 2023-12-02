@@ -249,10 +249,10 @@ async function getPlotsHavingTasks() {
     console.log("Getting Buildings containing ");
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT Building.BuildingName, SUM(Supply.SupplyCount) AS "Total Supply Count"
-        FROM Building
-        Join Supply ON Building.BuildingName = Supply.BuildingName
-        GROUP BY Building.BuildingName
-        HAVING SUM(Supply.SupplyCount) < 15
+                                                FROM Building
+                                                Join Supply ON Building.BuildingName = Supply.BuildingName
+                                                GROUP BY Building.BuildingName
+                                                HAVING SUM(Supply.SupplyCount) < 15
         `
         );
         return result;

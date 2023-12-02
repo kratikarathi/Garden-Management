@@ -410,7 +410,7 @@ VALUES (9, 'Seeds', 'West Shed', 12);
 INSERT INTO Supply
 VALUES (10, 'Dutch Hoe', 'Barn', 2);
 INSERT INTO Supply
-VALUES (11, 'Seeds', 'Barn', 2);
+VALUES (11, 'Seeds', 'West Shed', 2);
 INSERT INTO Supply
 VALUES (12, 'Seeds', 'East Shed', 10);
 INSERT INTO Supply
