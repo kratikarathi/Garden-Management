@@ -11,6 +11,7 @@
 .App-body{
   min-height:75vh;
   height:100%;
+  margin-left: 15px;
   padding-bottom: 5vh;
   margin-top: 5vh;
   display: flex;

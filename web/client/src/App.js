@@ -40,7 +40,7 @@ function App() {
       .then((data) => setData(data));
   }, []);
 
-  const screens = ['FarmMap','PlantButton','InsertButton','Selection','Projection']
+  const screens = ['Farm Map','PlantButton','Selection','Projection']
   const handleButtonClick = (screen) => {
     setScreen(screen);
   };
@@ -60,9 +60,8 @@ function App() {
         <p>{data ? (data.connected ? 'Connected' : 'Not Connected') : 'Loading...'}</p>
       </header>
       <body className="App-body">
-          {screen == 'FarmMap' ? <FarmMap /> : ""}
+          {screen == 'Farm Map' ? <FarmMap /> : ""}
           {screen == 'PlantButton' ? <PlantButton /> : ""}
-          {screen == 'InsertButton' ? <InsertButton /> : ""}
           {screen == 'Projection' ? <Projection /> : ""}
           {screen == 'Selection' ? <Selection /> : ""}
       </body>

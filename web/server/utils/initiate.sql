@@ -221,6 +221,21 @@ values (5, 5, 10, 50, 20, '888789888', 12000);
 INSERT INTO Plot
 values (6, 5, 10, 70, 20, NULL, 16000);
 
+INSERT INTO Plant (PlantID, PlotID, PlantName, PlantDate, HarvestDate, HarvestWeight)
+values (1,1,'Squash', SYSDATE -300, SYSDATE - 240, 15);
+
+INSERT INTO Plant (PlantID, PlotID, PlantName, PlantDate, HarvestDate, HarvestWeight)
+VALUES (2,1,'Bell Pepper', SYSDATE -240, SYSDATE - 180, 5);
+
+INSERT INTO Plant (PlantID, PlotID, PlantName, PlantDate, HarvestDate, HarvestWeight)
+VALUES (3,1,'Lettuce', SYSDATE -180, SYSDATE - 150, 10);
+
+INSERT INTO Plant (PlantID, PlotID, PlantName, PlantDate, HarvestDate, HarvestWeight)
+VALUES (4,1,'Lavender', SYSDATE -150, SYSDATE - 60, 3);
+
+INSERT INTO Plant (PlantID, PlotID, PlantName, PlantDate, HarvestDate, HarvestWeight)
+VALUES (5,1,'Strawberry', SYSDATE -60, null, null);
+
 INSERT INTO PlotOwner
 values ('888789888', '2368634471', 5);
 INSERT INTO PlotOwner
