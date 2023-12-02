@@ -394,7 +394,7 @@ VALUES (1, 'Seeds', 'Barn', 10);
 INSERT INTO Supply
 VALUES (2, 'Fertilizer', 'Barn', 17);
 INSERT INTO Supply
-VALUES (3, 'Gloves', 'East Shed', 15);
+VALUES (3, 'Gloves', 'East Shed', 2);
 INSERT INTO Supply
 VALUES (4, 'Watering Can', 'East Shed', 4);
 INSERT INTO Supply
@@ -410,13 +410,13 @@ VALUES (9, 'Seeds', 'West Shed', 12);
 INSERT INTO Supply
 VALUES (10, 'Dutch Hoe', 'Barn', 2);
 INSERT INTO Supply
-VALUES (11, 'Seeds', 'West Shed', 2);
+VALUES (11, 'Seeds', 'West Shed', 15);
 INSERT INTO Supply
 VALUES (12, 'Seeds', 'East Shed', 10);
 INSERT INTO Supply
 VALUES (13, 'Seeds', 'Chicken Coop', 4);
 INSERT INTO Supply
-VALUES (14, 'Seeds', 'Gazebo', 5);
+VALUES (14, 'Seeds', 'Gazebo', 8);
 
 INSERT INTO Event
 values (
