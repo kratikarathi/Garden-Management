@@ -94,6 +94,15 @@ router.get('/get-buildings-supply-count', async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
+
+router.get('/division', async (req, res) => {
+    try {
+        const result = await appService.division();
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
 router.get('/get-plots', async (req, res) => {
     try {
          const result = await appService.getPlots();
