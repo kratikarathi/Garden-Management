@@ -302,21 +302,22 @@ async function division() {
 
 
 // UPDATE
-async function updatePlots(oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue) {
-    console.log("Updating plot tasks" + oldID + sinValue + statusValue);
-    console.log("Updating plot tasks");
-    return await withOracleDB(async (connection) => {
-        console.log("Values:", oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue);
+async function updatePlots(PlotID, TaskNum,TaskDescription, Deadline, SIN, Status) {
 
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `UPDATE PlotTask 
-            SET TaskDescription = :taskDesc, Deadline = TO_DATE(:deadlineValue, 'YYYY-MM-DD'), SIN = :sinValue, status = :statusValue
-            WHERE PlotId = :oldID AND TaskNum = :oldNum`,
-            { oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue },
+            SET TaskDescription = :TaskDescription, Deadline = TO_DATE(:Deadline, 'YYYY-MM-DD'), SIN = :SIN, status = :Status
+            WHERE PlotId = :PlotID AND TaskNum = :TaskNum`,
+            { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status},
             { autoCommit: true }
         );
 
-        return result.rowsAffected && result.rowsAffected > 0;
+        if (result.rowsAffected > 0) {
+            return {message: `${result.rowsAffected} row updated` };
+        } else {
+            return {message: 'No task found.' };
+        }
     });
 }
 
@@ -372,7 +373,4 @@ module.exports = {
     getBuildingsSupplyCount,
     deletePlotTask,
     division,
-    //insertDemotable,
-    //updateNameDemotable,
-    //countDemotable
 };

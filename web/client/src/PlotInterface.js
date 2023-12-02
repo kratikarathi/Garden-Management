@@ -1,6 +1,7 @@
 import './PlotInterface.css';
 import Table from "./Table";
 import InsertPlotTask from "./InsertPlotTask";
+import UpdatePlotTask from "./UpdatePlotTask";
 import React, { useState } from 'react';
 const PORT = process.env.REACT_APP_API_PORT;
 const URL = "http://localhost:" + PORT + "/api"; //URL of our backend
@@ -96,10 +97,14 @@ const PlotInterface = ({plotID}) => {
                     {result && <div className = 'result' style={{ color: 'green' }}>  {result}</div>}
                     {error && <div className = 'result' style={{ color: 'red' }}>Error: {error}</div>}
 
-                    
-                    <div className="insert-interface">
-                        {/*insert component here*/}
-                        <InsertPlotTask PlotID={plotID} OnInsert={getPlotInfo}/>
+                    <div className = "interfaces">
+                        <div className="insert-interface">
+                            {/*insert component here*/}
+                            <InsertPlotTask PlotID={plotID} OnInsert={getPlotInfo}/>
+                        </div>
+                        <div className = "update-interface">
+                            <UpdatePlotTask PlotID={plotID} OnUpdate={getPlotInfo}/>
+                        </div>
                     </div>
 
             </div>

@@ -51,18 +51,24 @@ router.post('/insert-plot-task',async(req,res) => {
 });
 
 
+router.post('/update-plot-task', async (req, res) => {
+    const {PlotID,TaskNum, TaskDescription, Deadline, SIN, Status} = req.body;
 
+    try {
+        const result =await appService.updatePlots(PlotID, TaskNum, TaskDescription, Deadline, SIN, Status);
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
+    }
+});
 router.post('/update-plots', async (req, res) => {
-    const {oldNum, oldID, desc, date, sin, stat} = req.body;
-    console.log("Updating plot tasks router" + oldID + sin + stat);
-    console.log(req.body);
-    const updateResult = await appService.updatePlots(oldNum, oldID, desc, date, sin, stat);
-    if (updateResult) {
-        // res.json({ success: true });
-        res.send('them plots be updated.');
-    } else {
-        // res.status(500).json({ success: false });
-        res.status(500).send('not today dawg');
+    const {PlotID,TaskNum, TaskDescription, Deadline, SIN, Status} = req.body;
+
+    try {
+        const result =await appService.updatePlots(PlotID, TaskNum, TaskDescription, Deadline, SIN, Status);
+        res.json({data: result});
+    } catch(e) {
+        res.status(500).json({error: e.message});
     }
 });
 
