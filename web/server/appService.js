@@ -77,16 +77,16 @@ async function getTableNames() {
     });
 }
 
-async function deletePlotTask(taskNum,plotID){
+async function deletePlotTask(taskNum, plotID) {
     console.log("Deleting plot task");
     const query = 'DELETE FROM PlotTask WHERE TaskNum = :taskNum AND PlotID = :plotID';
-    const params = {taskNum:taskNum, plotID:plotID};
+    const params = { taskNum: taskNum, plotID: plotID };
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(query,params, { autoCommit: true });
+        const result = await connection.execute(query, params, { autoCommit: true });
         if (result.rowsAffected > 0) {
-            return {message: `${result.rowsAffected} rows deleted` };
+            return { message: `${result.rowsAffected} rows deleted` };
         } else {
-            return {message: 'No rows deleted' };
+            return { message: 'No rows deleted' };
         }
     });
 
@@ -96,19 +96,19 @@ async function deletePlotTask(taskNum,plotID){
 //insert a task into plotTask
 async function insertPlotTask(PlotID, TaskDescription, Deadline, SIN) {
 
-    const query =  `INSERT INTO PlotTask (TaskNum, PlotID, TaskDescription, SIN, Deadline) VALUES (:TaskNum, :PlotID, :TaskDescription, :SIN, TO_DATE(:Deadline,'YYYY-MM-DD'))`;
+    const query = `INSERT INTO PlotTask (TaskNum, PlotID, TaskDescription, SIN, Deadline) VALUES (:TaskNum, :PlotID, :TaskDescription, :SIN, TO_DATE(:Deadline,'YYYY-MM-DD'))`;
     console.log(query);
     return await withOracleDB(async (connection) => {
         //First lets find what our taskNum should be
         var result = await connection.execute(`SELECT MAX(TaskNum) AS MaxTaskNum FROM PlotTask WHERE PlotID = ${PlotID}`);
         var TaskNum = result.rows[0][0] !== null ? result.rows[0][0] + 1 : 1;
-        const params = {TaskNum:TaskNum, PlotID:PlotID, TaskDescription:TaskDescription, Deadline:Deadline, SIN:SIN};
+        const params = { TaskNum: TaskNum, PlotID: PlotID, TaskDescription: TaskDescription, Deadline: Deadline, SIN: SIN };
 
-        result = await connection.execute(query,params, { autoCommit: true });
+        result = await connection.execute(query, params, { autoCommit: true });
         if (result.rowsAffected > 0) {
-            return {message: `${result.rowsAffected} row inserted` };
+            return { message: `${result.rowsAffected} row inserted` };
         } else {
-            return {message: 'Failed to insert row.' };
+            return { message: 'Failed to insert row.' };
         }
     })
 }
@@ -131,7 +131,7 @@ async function getPlotInfo(plotID) {
     return await withOracleDB(async (connection) => {
         const result1 = await connection.execute(query1);
         const result2 = await connection.execute(query2);
-        return { plotTasks: result1, plotInfo: result2};
+        return { plotTasks: result1, plotInfo: result2 };
     });
 }
 
@@ -246,13 +246,13 @@ async function getTasksByPlot() {
 }
 // HAVING
 async function getPlotsHavingTasks() {
-    console.log("Getting plots that have tasks");
+    console.log("Getting Buildings containing ");
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`
-        SELECT TaskNum
-        FROM PlotTask
-        GROUP BY TaskNum
-        HAVING COUNT(*) > 0
+        const result = await connection.execute(`SELECT Building.BuildingName, SUM(Supply.SupplyCount) AS "Total Supply Count"
+                                                FROM Building
+                                                Join Supply ON Building.BuildingName = Supply.BuildingName
+                                                GROUP BY Building.BuildingName
+                                                HAVING SUM(Supply.SupplyCount) < 15
         `
         );
         return result;
@@ -288,10 +288,10 @@ async function division() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
             SELECT s.SupplyType
-            FROM Supply s
+            FROM SupplyInformation s
             WHERE NOT EXISTS ((SELECT b.BuildingName FROM Building b)
-            MINUS
-            (SELECT s1.BuildingName FROM Supply s1 WHERE s1.buildingName=s.buildingName))
+                                MINUS
+                                (SELECT s1.BuildingName FROM Supply s1 WHERE s1.SupplyType=s.SupplyType))
             `
         );
         return result;
@@ -302,21 +302,21 @@ async function division() {
 
 
 // UPDATE
-async function updatePlots(PlotID, TaskNum,TaskDescription, Deadline, SIN, Status) {
+async function updatePlots(PlotID, TaskNum, TaskDescription, Deadline, SIN, Status) {
 
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `UPDATE PlotTask 
             SET TaskDescription = :TaskDescription, Deadline = TO_DATE(:Deadline, 'YYYY-MM-DD'), SIN = :SIN, status = :Status
             WHERE PlotId = :PlotID AND TaskNum = :TaskNum`,
-            { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status},
+            { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status },
             { autoCommit: true }
         );
 
         if (result.rowsAffected > 0) {
-            return {message: `${result.rowsAffected} row updated` };
+            return { message: `${result.rowsAffected} row updated` };
         } else {
-            return {message: 'No task found.' };
+            return { message: 'No task found.' };
         }
     });
 }

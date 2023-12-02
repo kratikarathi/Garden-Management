@@ -14,17 +14,17 @@ table tr {
 }
 
 table thead {
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #ffffff;
 }
 
 table {
-    background-color: rgb(29, 29, 29);
+    background-color: #0d0d0d;
     border-collapse: collapse;
 }
 
 .deleteButton {
     background-color: #000000; 
-    color: rgb(255, 0, 0);
+    color: #ff0000;
     font-size: 16px;
     font-weight: bold;
     width: 35px;

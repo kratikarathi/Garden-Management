@@ -54,7 +54,7 @@ const UpdatePlotTask = ({ PlotID,OnUpdate}) => {
     return (
         <div className="Update-Interface">
             <h1>
-                Update New Plot Task
+                Update Plot Task
             </h1>
             <form id="UpdatePlotTask" onSubmit={updatePlotTasks}>
                     Task Number: <input type="number" id="TaskNum" placeholder="Enter Task Number" required /> <br /><br />

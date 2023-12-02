@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "./Dashboard"
 import ResetButton from "./ResetButton";
-import PlantButton from "./PlantButton";
+import AggregatedReports from "./AggregatedReports";
 import Selection from "./Selection";
 import FarmMap from "./FarmMap";
 import Projection from "./Projection";
@@ -40,7 +40,7 @@ function App() {
       .then((data) => setData(data));
   }, []);
 
-  const screens = ['Farm Map','PlantButton','Selection','Projection']
+  const screens = ['Farm Map','Aggregated Reports','Selection','Projection']
   const handleButtonClick = (screen) => {
     setScreen(screen);
   };
@@ -61,7 +61,7 @@ function App() {
       </header>
       <body className="App-body">
           {screen == 'Farm Map' ? <FarmMap /> : ""}
-          {screen == 'PlantButton' ? <PlantButton /> : ""}
+          {screen == 'Aggregated Reports' ? <AggregatedReports /> : ""}
           {screen == 'Projection' ? <Projection /> : ""}
           {screen == 'Selection' ? <Selection /> : ""}
       </body>

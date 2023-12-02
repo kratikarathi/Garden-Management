@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './PlantButton.css';
+import './AggregatedReports.css';
 import Table from "./Table";
 const PORT = process.env.REACT_APP_API_PORT;
 const URL = `http://localhost:${PORT}/api`; // URL of our backend
