@@ -1,6 +1,24 @@
 import React from 'react';
 import './Table.css';
 function Table({ tableData, tableName, onDelete}) {
+
+    /*
+        From: https://jsfiddle.net/remarkablemark/7wegs1ao/
+    */
+    function isDate(value) {
+        switch (typeof value) {
+            case 'number':
+                return false;
+            case 'string':
+                return !isNaN(Date.parse(value));
+            case 'object':
+                if (value instanceof Date) {
+                    return !isNaN(value.getTime());
+                }
+            default:
+                return false;
+        }
+    }
     //First we need to parse our data
     //onDelete is a callback function to delete a row
     function deleteRow(row) {
@@ -37,7 +55,7 @@ function Table({ tableData, tableName, onDelete}) {
                                     row.map((cell,j) => {
                                         return (
                                             <td>
-                                                {cell}
+                                                {isDate(cell)?new Date(cell).toISOString().split('T')[0]:cell}
                                             </td>
                                         );
                                     })
