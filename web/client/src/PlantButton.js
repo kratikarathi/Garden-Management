@@ -35,7 +35,7 @@ const PlantButton = () => {
                 if (!response.ok) {
                     throw new Error('status: ' + response.status);
                 }
-                return response.text();
+                return response.json();
             })
             .then((text) => {
                 setResult(text);
@@ -51,7 +51,7 @@ const PlantButton = () => {
                 if (!response.ok) {
                     throw new Error('status: ' + response.status);
                 }
-                return response.text();
+                return response.json();
             })
             .then((text) => {
                 setResult(text);
@@ -76,69 +76,11 @@ const PlantButton = () => {
                 setError('Failed to group');
             });
     };
-
-    const updatePlotTasks = async () => {
-        const oldNumValue = document.getElementById('updateOldNum').value;
-        const oldIDValue = document.getElementById('updateOldID').value;
-        const descValue = document.getElementById('updateDesc').value;
-        const deadlineValue = document.getElementById('updateDate').value;
-        const sinValue = document.getElementById('updateSin').value;
-        const statValue = document.getElementById('updateStat').value;
-        console.log(deadlineValue);
-        console.log(JSON.stringify({
-            oldNum: oldNumValue,
-            oldID: oldIDValue,
-            desc: descValue,
-            date: deadlineValue,
-            sin: sinValue,
-            stat: statValue
-        }));
-
-        try {
-            const response = await fetch(`${URL}/update-plots`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    oldNum: oldNumValue,
-                    oldID: oldIDValue,
-                    desc: descValue,
-                    date: deadlineValue,
-                    sin: sinValue,
-                    stat: statValue
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update plot tasks');
-            }
-
-            const text = await response.text();
-            setResult(text);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
     return (
         <div className='plant-button'>
             <button onClick={getPlotTasks}>View Plot Task Info</button>
             {result && <Table tableData={result}/>}
             {error && <div className='result' style={{ color: 'red' }}>Error: {error}</div>}
-
-            {viewedTasks && (
-                <form id="updataPlotTasks" onSubmit={updatePlotTasks}>
-                    Task Number: <input type="number" id="updateOldNum" placeholder="Enter Task Number" required /> <br /><br />
-                    Plot ID: <input type="number" id="updateOldID" placeholder="Enter Plot ID" required /> <br /><br />
-                    Description: <input type="text" id="updateDesc" placeholder="Enter New Description" maxLength="20" /> <br /><br />
-                    Deadline: <input type="date" id="updateDate" placeholder="Enter New Deadline" maxLength="20" /> <br /><br />
-                    SIN: <input type="text" id="updateSin" placeholder="Enter New SIN" maxLength="20" /> <br /><br />
-                    Status: <input type="text" id="updateStat" placeholder="Complete" maxLength="20" /> <br /><br />
-
-                    <button type="submit">Update Plot Task Info</button><br/>
-                </form>
-            )}
 
             {viewedTasks && (
                 <div className='group-by'>
