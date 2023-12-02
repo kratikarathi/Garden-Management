@@ -1,8 +1,11 @@
 import React from 'react';
 import './Table.css';
-function Table({ tableData, tableName }) {
+function Table({ tableData, tableName, onDelete}) {
     //First we need to parse our data
-
+    //onDelete is a callback function to delete a row
+    function deleteRow(row) {
+        onDelete(row);
+    }
     const metaData = tableData?.data?.metaData; //make sure data exists
     const rows = tableData?.data?.rows;
     if (!metaData) { //if metadata doesnt exist then return nothing
@@ -27,12 +30,11 @@ function Table({ tableData, tableName }) {
                     </tr>
                 </thead>
                 <tbody>
-
-                    {rows.map(row => {
+                    {rows.map((row,i) => {
                         return (
-                            <tr>
+                            <tr key={i}>
                                 {
-                                    row.map(cell => {
+                                    row.map((cell,j) => {
                                         return (
                                             <td>
                                                 {cell}
@@ -40,6 +42,10 @@ function Table({ tableData, tableName }) {
                                         );
                                     })
                                 }
+                                {onDelete? <td>
+                                    <button className="deleteButton" onClick={() => deleteRow(row)}>&times;</button>
+                                </td>:""}
+                                
                             </tr>)
                     })}
                 </tbody>
