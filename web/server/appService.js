@@ -288,10 +288,10 @@ async function division() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
             SELECT s.SupplyType
-            FROM Supply s
+            FROM SupplyInformation s
             WHERE NOT EXISTS ((SELECT b.BuildingName FROM Building b)
-            MINUS
-            (SELECT s1.BuildingName FROM Supply s1 WHERE s1.buildingName=s.buildingName))
+                                MINUS
+                                (SELECT s1.BuildingName FROM Supply s1 WHERE s1.SupplyType=s.SupplyType))
             `
         );
         return result;
