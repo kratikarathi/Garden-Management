@@ -78,15 +78,12 @@ const PlantButton = () => {
     };
 
     const updatePlotTasks = async () => {
-        console.log("dog");
-
         const oldNumValue = document.getElementById('updateOldNum').value;
         const oldIDValue = document.getElementById('updateOldID').value;
         const descValue = document.getElementById('updateDesc').value;
         const deadlineValue = document.getElementById('updateDate').value;
         const sinValue = document.getElementById('updateSin').value;
         const statValue = document.getElementById('updateStat').value;
-        console.log("hi cat");
         console.log(deadlineValue);
         console.log(JSON.stringify({
             oldNum: oldNumValue,
