@@ -127,11 +127,6 @@ const PlantButton = () => {
             {result && <Table tableData={result}/>}
             {error && <div className='result' style={{ color: 'red' }}>Error: {error}</div>}
 
-            <div className='building'>
-                <h3> Search Building name with the minimum average supply count </h3>
-                <button onClick={buildingSupplyCount}> Search </button>
-            </div>
-
             {viewedTasks && (
                 <form id="updataPlotTasks" onSubmit={updatePlotTasks}>
                     Task Number: <input type="number" id="updateOldNum" placeholder="Enter Task Number" required /> <br /><br />
@@ -157,6 +152,11 @@ const PlantButton = () => {
                     <button onClick={plotsHavingTasks}> Search </button>
                 </div>
 )}
+            <div className='building'>
+                <h3> Search Building name with the minimum average supply count </h3>
+                <button onClick={buildingSupplyCount}> Search </button>
+            </div>
+
         </div>
     );
 };

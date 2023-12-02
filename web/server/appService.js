@@ -281,6 +281,26 @@ async function getBuildingsSupplyCount() {
     });
 }
 
+// Find supplies that are in all buildings.
+// DIVISION
+async function division() {
+    console.log("Getting supplies that are in all buildings.");
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT s.SupplyType
+            FROM Supply s
+            WHERE NOT EXISTS ((SELECT b.BuildingName FROM Building b)
+            MINUS
+            (SELECT s1.BuildingName FROM Supply s1 WHERE s1.buildingName=s.buildingName))
+            `
+        );
+        return result;
+    }).catch((e) => {
+        throw new Error('Failed: ' + e);
+    });
+}
+
+
 // UPDATE
 async function updatePlots(oldNum, oldID, taskDesc, deadlineValue, sinValue, statusValue) {
     console.log("Updating plot tasks" + oldID + sinValue + statusValue);
@@ -350,7 +370,8 @@ module.exports = {
     getTasksByPlot,
     getPlotsHavingTasks,
     getBuildingsSupplyCount,
-    deletePlotTask
+    deletePlotTask,
+    division,
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable
