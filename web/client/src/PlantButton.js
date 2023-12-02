@@ -67,7 +67,7 @@ const PlantButton = () => {
                 if (!response.ok) {
                     throw new Error('status: ' + response.status);
                 }
-                return response.text();
+                return response.json();
             })
             .then((text) => {
                 setResult(text);
