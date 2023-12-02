@@ -77,10 +77,46 @@ async function getTableNames() {
     });
 }
 
+async function deletePlotTask(taskNum,plotID){
+    console.log("Deleting plot task");
+    const query = 'DELETE FROM PlotTask WHERE TaskNum = :taskNum AND PlotID = :plotID';
+    const params = {taskNum:taskNum, plotID:plotID};
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(query,params, { autoCommit: true });
+        if (result.rowsAffected > 0) {
+            return {message: `${result.rowsAffected} rows deleted` };
+        } else {
+            return {message: 'No rows deleted' };
+        }
+    });
+
+}
+
+
+//insert a task into plotTask
+async function insertPlotTask(PlotID, TaskDescription, Deadline, SIN) {
+
+    const query =  `INSERT INTO PlotTask (TaskNum, PlotID, TaskDescription, SIN, Deadline) VALUES (:TaskNum, :PlotID, :TaskDescription, :SIN, TO_DATE(:Deadline,'YYYY-MM-DD'))`;
+    console.log(query);
+    return await withOracleDB(async (connection) => {
+        //First lets find what our taskNum should be
+        var result = await connection.execute(`SELECT MAX(TaskNum) AS MaxTaskNum FROM PlotTask WHERE PlotID = ${PlotID}`);
+        var TaskNum = result.rows[0][0] !== null ? result.rows[0][0] + 1 : 1;
+        const params = {TaskNum:TaskNum, PlotID:PlotID, TaskDescription:TaskDescription, Deadline:Deadline, SIN:SIN};
+
+        result = await connection.execute(query,params, { autoCommit: true });
+        if (result.rowsAffected > 0) {
+            return {message: `${result.rowsAffected} row inserted` };
+        } else {
+            return {message: 'Failed to insert row.' };
+        }
+    })
+}
+
 //JOIN (query 1 joins)
 async function getPlotInfo(plotID) {
     const query1 = `
-    SELECT DISTINCT  pt.PlotID, c.PersonName as "Gardener Name",g.SIN as "Gardener SIN", pt.TaskDescription as "Description", pt.Deadline as "Deadline", pt.Status as "Status"
+    SELECT DISTINCT  pt.TaskNum as "Task Number", pt.PlotID, c.PersonName as "Gardener Name",g.SIN as "Gardener SIN", pt.TaskDescription as "Description", pt.Deadline as "Deadline", pt.Status as "Status"
     FROM PlotTask pt, Gardener g, CommunityMember c
     WHERE pt.PlotID = ${plotID} AND pt.SIN = g.SIN AND c.SIN = g.SIN
     ORDER BY pt.Deadline
@@ -295,20 +331,6 @@ async function resetTables() {
     }
 }
 
-async function insertPlotTask(TaskNum, PlotID, TaskDescription, Deadline, SIN, Status) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `INSERT INTO PlotTask VALUES (:TaskNum, :PlotID, :TaskDescription, TO_DATE(:Deadline,'YYYY-MM-DD'), :SIN, :Status)`,
-            { TaskNum, PlotID, TaskDescription, Deadline, SIN, Status },
-            { autoCommit: true}
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
 
 module.exports = {
     testOracleConnection,
@@ -328,6 +350,7 @@ module.exports = {
     getTasksByPlot,
     getPlotsHavingTasks,
     getBuildingsSupplyCount,
+    deletePlotTask
     //insertDemotable,
     //updateNameDemotable,
     //countDemotable
