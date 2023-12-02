@@ -391,6 +391,14 @@ INSERT INTO Supply
 VALUES (9, 'Seeds', 'West Shed', 12);
 INSERT INTO Supply
 VALUES (10, 'Dutch Hoe', 'Barn', 2);
+INSERT INTO Supply
+VALUES (11, 'Seeds', 'Barn', 2);
+INSERT INTO Supply
+VALUES (12, 'Seeds', 'East Shed', 10);
+INSERT INTO Supply
+VALUES (13, 'Seeds', 'Chicken Coop', 4);
+INSERT INTO Supply
+VALUES (14, 'Seeds', 'Gazebo', 5);
 
 INSERT INTO Event
 values (

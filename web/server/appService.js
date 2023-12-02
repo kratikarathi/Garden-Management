@@ -251,11 +251,11 @@ async function division() {
     console.log("Getting supplies that are in all buildings.");
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-            SELECT s.SupplyID
+            SELECT s.SupplyType
             FROM Supply s
             WHERE NOT EXISTS ((SELECT b.BuildingName FROM Building b)
-            EXCEPT
-            (SELECT s1.BuildingName FROM Supply s1 WHERE s1.BuildingName=b.BuildingName))
+            MINUS
+            (SELECT s1.BuildingName FROM Supply s1 WHERE s1.buildingName=s.buildingName))
             `
         );
         return result;
