@@ -1,15 +1,3 @@
-# project_c3l3v_d0b3b_e4v4v
+Often, scheduling and management of a large community garden poses to be a challenge. It is difficult to assign gardeners as they have varying availability. Moreover, it is hard to keep track of the tools (Gardener A might need Tool B which is currently being used by Gardener C). Bad management could lead to delays in plantation and harvesting, and delays could result in spoilt crops and monetary losses. 
 
-Resources accessed:
-* https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/
-
-* https://www.geeksforgeeks.org/how-to-create-a-table-in-reactjs/
-
-* https://www.simplilearn.com/tutorials/reactjs-tutorial/how-to-create-functional-react-dropdown-menu
-
-Changes:
-* Denormalized plot areas to allow for us to have separate prices for plots of the same size.
-* Added Plant table to track individual plants, allowing us to gather harvest data.
-* Merged supply and tool tables since they effectively stored the same type of information.
-* Added coordinate data to buildings and plots to allow for map rendering.
-
+The database will allow for community members to be gardeners, plot owners, or both.  Plot owners are responsible for managing their plot and will be able to create tasks for gardeners to complete on their plot (ie. Water plot at @5pm tomorrow). Community members will be able to rent a plot and view information on vacant plots such as plot size and monthly rent price.  As a gardener, you can view the list of tasks and assign them to your own schedule.  Gardeners will be able to view information on their task, such as task descriptions, required seeds or tools, and which shed to find the required seeds or tools.  The database will also keep track of the number of seeds and tools stored in each shed.  Lastly, all community members will also be able to view which plants are planted on each plot, along with information and care instructions of each plant type.   
